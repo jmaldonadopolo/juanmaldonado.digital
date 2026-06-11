@@ -1,0 +1,193 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { getImage, Image } from 'astro:assets';
+import BlogLayout from '@/layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const siteUrl = Astro.site?.toString() ?? 'https://juanmaldonado.digital/';
+const canonical = new URL(`/blog/${post.id}/`, siteUrl).toString();
+const blogUrl = new URL('/blog/', siteUrl).toString();
+const socialImage = await getImage({
+  src: post.data.image,
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  format: 'jpg',
+});
+const imageUrl = new URL(socialImage.src, siteUrl).toString();
+const publishedTime = post.data.pubDate.toISOString();
+const modifiedTime = (post.data.updatedDate ?? post.data.pubDate).toISOString();
+const formattedDate = post.data.pubDate.toLocaleDateString('es-CO', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+const structuredData = [
+  {
+    '@type': 'WebPage',
+    '@id': `${canonical}#webpage`,
+    url: canonical,
+    name: post.data.title,
+    description: post.data.description,
+    datePublished: publishedTime,
+    dateModified: modifiedTime,
+    inLanguage: 'es-CO',
+    isPartOf: { '@id': `${siteUrl}#website` },
+    primaryImageOfPage: { '@id': `${canonical}#primary-image` },
+    breadcrumb: { '@id': `${canonical}#breadcrumb` },
+  },
+  {
+    '@type': 'BlogPosting',
+    '@id': `${canonical}#article`,
+    url: canonical,
+    headline: post.data.title,
+    name: post.data.title,
+    description: post.data.description,
+    datePublished: publishedTime,
+    dateModified: modifiedTime,
+    author: { '@id': `${siteUrl}#person` },
+    publisher: { '@id': `${siteUrl}#person` },
+    mainEntityOfPage: { '@id': `${canonical}#webpage` },
+    isPartOf: { '@id': `${siteUrl}#website` },
+    image: { '@id': `${canonical}#primary-image` },
+    inLanguage: 'es-CO',
+    keywords: post.data.tags,
+    articleSection: 'Blog',
+    wordCount: post.body.split(/\s+/).filter(Boolean).length,
+    timeRequired: `PT${post.data.readingTime.replace(/\D/g, '')}M`,
+    sameAs: post.data.sourceUrl,
+  },
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${canonical}#breadcrumb`,
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Inicio',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Blog',
+        item: blogUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.data.title,
+        item: canonical,
+      },
+    ],
+  },
+];
+---
+
+<BlogLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogImage={imageUrl}
+  imageAlt={post.data.imageAlt}
+  type="article"
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  tags={post.data.tags}
+  structuredData={structuredData}
+>
+  <article class="mx-auto max-w-3xl pb-10 pt-12 sm:pt-18">
+    <nav aria-label="Migas de pan">
+      <ol class="flex flex-wrap items-center gap-2 font-mono text-[11px] tracking-[0.12em] text-smoke uppercase">
+        <li>
+          <a
+            href="/"
+            class="transition-colors hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+          >
+            Inicio
+          </a>
+        </li>
+        <li aria-hidden="true" class="text-steel">/</li>
+        <li>
+          <a
+            href="/blog/"
+            class="transition-colors hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+          >
+            Blog
+          </a>
+        </li>
+        <li aria-hidden="true" class="text-steel">/</li>
+        <li aria-current="page" class="max-w-52 truncate text-bone sm:max-w-96">
+          {post.data.title}
+        </li>
+      </ol>
+    </nav>
+
+    <header class="mt-9 border-b border-steel pb-10 sm:pb-12">
+      <div class="flex flex-wrap items-center gap-3 font-mono text-[11px] tracking-[0.12em] text-smoke uppercase">
+        <time datetime={publishedTime}>{formattedDate}</time>
+        <span aria-hidden="true" class="text-steel">/</span>
+        <span>{post.data.readingTime} de lectura</span>
+      </div>
+
+      <h1 class="mt-5 font-display text-3xl font-bold leading-tight tracking-[-0.035em] text-bone sm:text-5xl">
+        {post.data.title}
+      </h1>
+      <p class="mt-6 text-lg font-light leading-8 text-smoke">
+        {post.data.description}
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {
+          post.data.tags.map((tag) => (
+            <span class="rounded-md border border-steel bg-graphite px-2.5 py-1 font-mono text-[10px] tracking-wider text-smoke uppercase">
+              {tag}
+            </span>
+          ))
+        }
+      </div>
+    </header>
+
+    <Image
+      src={post.data.image}
+      alt={post.data.imageAlt}
+      widths={[640, 960, 1280]}
+      sizes="(min-width: 768px) 768px, 100vw"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      class="mt-10 aspect-video w-full rounded-2xl border border-steel object-cover shadow-2xl shadow-black/30"
+    />
+
+    <div class="prose prose-invert mt-10 max-w-none prose-headings:font-display prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-bone prose-h2:mt-12 prose-h2:text-2xl prose-p:text-[17px] prose-p:font-light prose-p:leading-8 prose-p:text-bone/85 prose-a:text-acid prose-a:decoration-acid/40 prose-strong:text-bone prose-li:text-[17px] prose-li:font-light prose-li:leading-8 prose-li:text-bone/85 prose-marker:text-acid prose-hr:border-steel">
+      <Content />
+    </div>
+
+    <footer class="mt-12 border-t border-steel pt-6">
+      <a
+        href={post.data.sourceUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="font-mono text-[11px] tracking-[0.12em] text-smoke uppercase transition-colors hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+      >
+        Ver publicación original en LinkedIn ↗
+        <span class="sr-only"> (se abre en una pestaña nueva)</span>
+      </a>
+    </footer>
+  </article>
+</BlogLayout>

@@ -1,0 +1,87 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/logo.svg';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  structuredData: Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  ogImage,
+  imageAlt,
+  type = 'website',
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  structuredData,
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={ogImage}
+  imageAlt={imageAlt}
+  type={type}
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  tags={tags}
+  structuredData={structuredData}
+>
+  <div class="relative mx-auto min-h-dvh w-full max-w-5xl px-5 pb-16 sm:px-8">
+    <header class="sticky top-0 z-20 border-b border-steel bg-void/90 py-4 backdrop-blur-xl">
+      <nav class="flex items-center justify-between" aria-label="Navegación del blog">
+        <a
+          href="/"
+          aria-label="Ir al perfil de Juan Maldonado"
+          class="flex min-h-11 items-center rounded-md px-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid"
+        >
+          <Image
+            src={logo}
+            alt=""
+            width={104}
+            loading="eager"
+            class="h-auto w-20 sm:w-24"
+          />
+        </a>
+
+        <div class="flex items-center gap-1 rounded-xl border border-steel bg-graphite p-1">
+          <a
+            href="/blog/"
+            aria-current={currentPath.startsWith('/blog') ? 'page' : undefined}
+            class="rounded-lg bg-steel px-3.5 py-2 font-mono text-[10px] font-semibold tracking-wider text-acid uppercase focus-visible:outline-2 focus-visible:outline-acid"
+          >
+            Blog
+          </a>
+          <a
+            href="/"
+            class="rounded-lg px-3.5 py-2 font-mono text-[11px] tracking-wider text-smoke uppercase transition-colors hover:bg-steel hover:text-bone focus-visible:outline-2 focus-visible:outline-acid motion-reduce:transition-none"
+          >
+            Inicio
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="mt-16 border-t border-steel pt-7 text-center font-mono text-[11px] tracking-[0.14em] text-smoke uppercase">
+      juanmaldonado.digital · {new Date().getFullYear()}
+    </footer>
+  </div>
+</BaseLayout>

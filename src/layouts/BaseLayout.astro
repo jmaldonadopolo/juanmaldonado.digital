@@ -1,0 +1,82 @@
+---
+import '@/styles/global.css';
+import SiteSeo from '@/components/SiteSeo.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  imageAlt?: string;
+  ogTitle?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
+  type?: 'profile' | 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  structuredData?: Record<string, unknown>[];
+}
+
+const {
+  title = 'Tecnología y negocio digital',
+  description = 'Herramientas, consultoría y contenidos sobre tecnología, sistemas y negocio digital para emprender con criterio en la era digital.',
+  ogImage = '/miniatura-social.jpg',
+  imageAlt = 'Logotipo JM de Juan Maldonado y dominio juanmaldonado.digital',
+  ogTitle = title,
+  noindex = false,
+  nofollow = false,
+  type = 'profile',
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  structuredData: pageStructuredData,
+} = Astro.props;
+
+---
+
+<!doctype html>
+<html lang="es-CO">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#090909" />
+
+    <SiteSeo
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      imageAlt={imageAlt}
+      ogTitle={ogTitle}
+      noindex={noindex}
+      nofollow={nofollow}
+      type={type}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      tags={tags}
+      structuredData={pageStructuredData}
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+  </head>
+  <body class="relative min-h-dvh overflow-x-hidden bg-void font-sans text-bone antialiased selection:bg-acid selection:text-void">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-acid focus:px-4 focus:py-2 focus:font-semibold focus:text-void focus:shadow-lg"
+    >
+      Saltar al contenido principal
+    </a>
+
+    <div
+      aria-hidden="true"
+      class="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.014)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.014)_1px,transparent_1px)] bg-[size:56px_56px]"
+    >
+    </div>
+    <slot />
+  </body>
+</html>

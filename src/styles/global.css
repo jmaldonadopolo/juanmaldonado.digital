@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-void: #090909;
+  --color-graphite: #131313;
+  --color-steel: #1e1e1e;
+  --color-bone: #eaeaea;
+  --color-smoke: #929292;
+  --color-acid: #b6ff28;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Space Grotesk', 'Geist', ui-sans-serif, system-ui, sans-serif;
+}

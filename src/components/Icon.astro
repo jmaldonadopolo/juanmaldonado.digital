@@ -1,0 +1,58 @@
+---
+import arrowUpRight from '@/assets/icons/arrow-up-right.svg';
+import article from '@/assets/icons/article.svg';
+import blog from '@/assets/icons/blog.svg';
+import calendar from '@/assets/icons/calendar.svg';
+import facebook from '@/assets/icons/facebook.svg';
+import instagram from '@/assets/icons/instagram.svg';
+import linkedin from '@/assets/icons/linkedin.svg';
+import threads from '@/assets/icons/threads.svg';
+import tiktok from '@/assets/icons/tiktok.svg';
+import x from '@/assets/icons/x.svg';
+
+type Props = {
+  name:
+    | 'arrow-up-right'
+    | 'article'
+    | 'blog'
+    | 'calendar'
+    | 'facebook'
+    | 'instagram'
+    | 'linkedin'
+    | 'threads'
+    | 'tiktok'
+    | 'x';
+  size?: number;
+  class?: string;
+};
+
+const {
+  name,
+  size = 18,
+  class: className = '',
+} = Astro.props;
+
+const icons = {
+  'arrow-up-right': arrowUpRight,
+  article,
+  blog,
+  calendar,
+  facebook,
+  instagram,
+  linkedin,
+  threads,
+  tiktok,
+  x,
+};
+
+const icon = icons[name];
+---
+
+<img
+  src={icon.src}
+  alt=""
+  width={size}
+  height={size}
+  class={className}
+  aria-hidden="true"
+/>

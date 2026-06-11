@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BlogPostCard from '@/components/BlogPostCard.astro';
+import BlogLayout from '@/layouts/BlogLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const siteUrl = Astro.site?.toString() ?? 'https://juanmaldonado.digital/';
+const blogUrl = new URL('/blog/', siteUrl).toString();
+const title = 'Blog sobre tecnología y negocio digital';
+const description =
+  'Artículos de Juan Maldonado sobre tecnología, sistemas, negocio digital, escritura y criterio profesional.';
+
+const structuredData = [
+  {
+    '@type': 'CollectionPage',
+    '@id': `${blogUrl}#collection`,
+    url: blogUrl,
+    name: title,
+    description,
+    inLanguage: 'es-CO',
+    isPartOf: { '@id': `${siteUrl}#website` },
+    author: { '@id': `${siteUrl}#person` },
+    mainEntity: { '@id': `${blogUrl}#articles` },
+  },
+  {
+    '@type': 'ItemList',
+    '@id': `${blogUrl}#articles`,
+    name: 'Artículos del blog de Juan Maldonado',
+    numberOfItems: posts.length,
+    itemListElement: posts.map((post, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: post.data.title,
+      url: new URL(`/blog/${post.id}/`, siteUrl).toString(),
+    })),
+  },
+];
+---
+
+<BlogLayout title={title} description={description} structuredData={structuredData}>
+  <section class="pb-10 pt-14 sm:pb-14 sm:pt-20">
+    <p class="font-mono text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">
+      Archivo editorial
+    </p>
+    <h1 class="mt-4 font-display text-4xl font-bold tracking-[-0.035em] text-bone sm:text-5xl">
+      Blog
+    </h1>
+    <p class="mt-5 max-w-2xl text-base font-light leading-7 text-smoke sm:text-lg sm:leading-8">
+      Tecnología, negocio digital, sistemas y escritura. Notas para pensar con más contexto y menos ruido.
+    </p>
+  </section>
+
+  <section
+    class="rounded-[2rem] border border-steel bg-graphite px-5 py-7 shadow-2xl shadow-black/30 sm:px-7 sm:py-9"
+    aria-labelledby="articles-heading"
+  >
+    <h2 id="articles-heading" class="sr-only">Lista de artículos</h2>
+    {posts.map((post, index) => <BlogPostCard post={post} priority={index === 0} />)}
+  </section>
+</BlogLayout>

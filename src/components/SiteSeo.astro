@@ -1,0 +1,123 @@
+---
+import { SEO } from 'astro-seo';
+import {
+  buildStructuredData,
+  SITE_URL,
+  type StructuredData,
+} from '@/lib/structured-data';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  imageAlt?: string;
+  ogTitle?: string;
+  noindex?: boolean;
+  nofollow?: boolean;
+  type?: 'profile' | 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
+  structuredData?: StructuredData[];
+}
+
+const {
+  title = 'Tecnología y negocio digital',
+  description = 'Herramientas, consultoría y contenidos sobre tecnología, sistemas y negocio digital para emprender con criterio en la era digital.',
+  ogImage = '/miniatura-social.jpg',
+  imageAlt = 'Logotipo JM de Juan Maldonado y dominio juanmaldonado.digital',
+  ogTitle = title,
+  noindex = false,
+  nofollow = false,
+  type = 'profile',
+  publishedTime,
+  modifiedTime,
+  tags = [],
+  structuredData,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).toString();
+const imageUrl = new URL(ogImage, Astro.site ?? SITE_URL).toString();
+const twitterUsername = '@jmaldonadopolo';
+const jsonLd = buildStructuredData({
+  canonical,
+  imageUrl,
+  imageAlt,
+  title,
+  description,
+  page: structuredData,
+});
+---
+
+<SEO
+  charset="UTF-8"
+  title={title}
+  titleTemplate="%s | Juan Maldonado"
+  titleDefault="Juan Maldonado | Tecnología y negocio digital"
+  description={description}
+  canonical={canonical}
+  noindex={noindex}
+  nofollow={nofollow}
+  robotsExtras="max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+  openGraph={{
+    basic: {
+      title: ogTitle,
+      type,
+      image: imageUrl,
+      url: canonical,
+    },
+    optional: {
+      description,
+      locale: 'es_CO',
+      siteName: 'Juan Maldonado',
+    },
+    image: {
+      type: 'image/jpeg',
+      width: 1200,
+      height: 630,
+      alt: imageAlt,
+    },
+    article:
+      type === 'article'
+        ? {
+            publishedTime,
+            modifiedTime,
+            authors: ['Juan Maldonado'],
+            section: 'Blog',
+            tags,
+          }
+        : undefined,
+  }}
+  twitter={{
+    card: 'summary_large_image',
+    site: twitterUsername,
+    creator: twitterUsername,
+    title: ogTitle,
+    description,
+    image: imageUrl,
+    imageAlt,
+  }}
+  extend={{
+    link: [
+      { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
+      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
+      { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
+      { rel: 'shortcut icon', href: '/favicon.ico' },
+      { rel: 'manifest', href: '/site.webmanifest' },
+    ],
+    meta: [
+      { name: 'author', content: 'Juan Maldonado' },
+      ...(type === 'profile'
+        ? [
+            { property: 'profile:first_name', content: 'Juan' },
+            { property: 'profile:last_name', content: 'Maldonado' },
+            { property: 'profile:username', content: 'jmaldonadopolo' },
+          ]
+        : []),
+    ],
+  }}
+/>
+
+<!-- astro-seo genera metaetiquetas; Schema.org requiere JSON-LD independiente. -->
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
