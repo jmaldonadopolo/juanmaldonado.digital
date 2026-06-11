@@ -1,6 +1,8 @@
 ---
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { getImage, Image } from 'astro:assets';
+import AuthorBadge from '@/components/AuthorBadge.astro';
+import ShareButtons from '@/components/ShareButtons.astro';
 import BlogLayout from '@/layouts/BlogLayout.astro';
 
 export async function getStaticPaths() {
@@ -69,7 +71,7 @@ const structuredData = [
     inLanguage: 'es-CO',
     keywords: post.data.tags,
     articleSection: 'Blog',
-    wordCount: post.body.split(/\s+/).filter(Boolean).length,
+    wordCount: (post.body ?? '').split(/\s+/).filter(Boolean).length,
     timeRequired: `PT${post.data.readingTime.replace(/\D/g, '')}M`,
     sameAs: post.data.sourceUrl,
   },
@@ -152,6 +154,10 @@ const structuredData = [
         {post.data.description}
       </p>
 
+      <div class="mt-6">
+        <AuthorBadge />
+      </div>
+
       <div class="mt-6 flex flex-wrap gap-2">
         {
           post.data.tags.map((tag) => (
@@ -174,16 +180,18 @@ const structuredData = [
       class="mt-10 aspect-video w-full rounded-2xl border border-steel object-cover shadow-2xl shadow-black/30"
     />
 
-    <div class="prose prose-invert mt-10 max-w-none prose-headings:font-display prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-bone prose-h2:mt-12 prose-h2:text-2xl prose-p:text-[17px] prose-p:font-light prose-p:leading-8 prose-p:text-bone/85 prose-a:text-acid prose-a:decoration-acid/40 prose-strong:text-bone prose-li:text-[17px] prose-li:font-light prose-li:leading-8 prose-li:text-bone/85 prose-marker:text-acid prose-hr:border-steel">
+    <div class="prose prose-invert mt-10 max-w-none prose-headings:scroll-mt-24 prose-headings:font-display prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-bone prose-h2:mt-12 prose-h2:text-2xl prose-h3:mt-10 prose-h3:text-xl prose-p:text-[17px] prose-p:font-light prose-p:leading-8 prose-p:text-bone/85 prose-a:font-medium prose-a:text-acid prose-a:underline prose-a:decoration-acid/40 prose-a:underline-offset-4 prose-a:hover:text-bone prose-a:focus-visible:outline-2 prose-a:focus-visible:outline-offset-4 prose-a:focus-visible:outline-acid prose-blockquote:border-acid prose-blockquote:text-smoke prose-strong:text-bone prose-code:text-acid prose-code:before:content-none prose-code:after:content-none prose-pre:border prose-pre:border-steel prose-pre:bg-graphite prose-li:text-[17px] prose-li:font-light prose-li:leading-8 prose-li:text-bone/85 prose-marker:text-acid prose-hr:border-steel prose-th:text-bone prose-td:border-steel">
       <Content />
     </div>
 
-    <footer class="mt-12 border-t border-steel pt-6">
+    <footer class="mt-12 border-t border-steel pt-8">
+      <ShareButtons title={post.data.title} url={canonical} />
+
       <a
         href={post.data.sourceUrl}
         target="_blank"
         rel="noopener noreferrer"
-        class="font-mono text-[11px] tracking-[0.12em] text-smoke uppercase transition-colors hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+        class="mt-6 inline-flex font-mono text-[11px] tracking-[0.12em] text-smoke uppercase transition-colors hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
       >
         Ver publicación original en LinkedIn ↗
         <span class="sr-only"> (se abre en una pestaña nueva)</span>

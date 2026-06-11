@@ -6,7 +6,6 @@ image: "../../assets/blog/considera-astro-wordpress.jpg"
 imageAlt: "Portada de Astro con el texto Build the web you want"
 sourceUrl: "https://www.linkedin.com/pulse/considera-astro-en-lugar-de-wordpress-para-el-sitio-maldonado-polo-6l1jc/"
 tags: ["Astro", "WordPress", "Desarrollo web", "Tecnología"]
-featured: true
 readingTime: "4 min"
 ---
 

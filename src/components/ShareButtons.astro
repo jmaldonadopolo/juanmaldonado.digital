@@ -1,0 +1,73 @@
+---
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+const encodedMessage = encodeURIComponent(`${title} ${url}`);
+
+const networks = [
+  {
+    name: 'Facebook',
+    icon: 'facebook',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  },
+  {
+    name: 'X',
+    icon: 'x',
+    href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+  },
+  {
+    name: 'LinkedIn',
+    icon: 'linkedin',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+  },
+  {
+    name: 'WhatsApp',
+    icon: 'whatsapp',
+    href: `https://wa.me/?text=${encodedMessage}`,
+  },
+] as const;
+---
+
+<aside
+  class="rounded-2xl border border-steel bg-graphite px-5 py-5 sm:flex sm:items-center sm:justify-between sm:gap-6"
+  aria-labelledby="share-heading"
+>
+  <div>
+    <h2 id="share-heading" class="font-display text-base font-semibold text-bone">
+      Compartir artículo
+    </h2>
+    <p class="mt-1 text-sm font-light text-smoke">
+      Comparte esta lectura con tu red.
+    </p>
+  </div>
+
+  <ul class="mt-4 flex flex-wrap gap-2 sm:mt-0" aria-label="Redes para compartir">
+    {
+      networks.map((network) => (
+        <li>
+          <a
+            href={network.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Compartir en ${network.name} (se abre en una pestaña nueva)`}
+            title={`Compartir en ${network.name}`}
+            class="group flex h-11 w-11 items-center justify-center rounded-xl border border-steel bg-void transition duration-200 hover:-translate-y-0.5 hover:border-acid hover:bg-steel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transform-none motion-reduce:transition-none"
+          >
+            <Icon
+              name={network.icon}
+              size={19}
+              class="h-5 w-5 opacity-75 transition-opacity group-hover:opacity-100"
+            />
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</aside>

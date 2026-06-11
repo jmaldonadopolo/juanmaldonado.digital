@@ -1,0 +1,45 @@
+---
+import { Image } from 'astro:assets';
+import avatar from '@/assets/avatar-profile.png';
+
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    'flex items-center',
+    compact ? 'gap-2.5' : 'gap-3',
+  ]}
+  aria-label="Autor: Juan Maldonado"
+>
+  <Image
+    src={avatar}
+    alt=""
+    width={compact ? 64 : 80}
+    height={compact ? 64 : 80}
+    format="webp"
+    quality={80}
+    loading="lazy"
+    class:list={[
+      'shrink-0 rounded-full border border-steel object-cover',
+      compact ? 'h-8 w-8' : 'h-10 w-10',
+    ]}
+  />
+  <p class="flex min-w-0 flex-col">
+    <span class="font-mono text-[10px] tracking-[0.12em] text-smoke uppercase">
+      Escrito por
+    </span>
+    <span
+      class:list={[
+        'mt-0.5 truncate font-display font-medium text-bone',
+        compact ? 'text-xs' : 'text-sm',
+      ]}
+    >
+      Juan Maldonado
+    </span>
+  </p>
+</div>

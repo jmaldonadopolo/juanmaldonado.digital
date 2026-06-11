@@ -36,7 +36,7 @@ import { links, profile, socialLinks } from '@/data/links';
           />
         </div>
 
-        <div class="relative">
+        <div class="group relative">
           <div
             aria-hidden="true"
             class="absolute -inset-2 rounded-full border border-acid/20"
@@ -53,11 +53,16 @@ import { links, profile, socialLinks } from '@/data/links';
             loading="eager"
             fetchpriority="high"
           />
-          <span
-            class="absolute right-1 bottom-1 h-4 w-4 rounded-full border-4 border-graphite bg-acid"
+          <div
             aria-hidden="true"
+            class="pointer-events-none absolute -inset-2 animate-[spin_900ms_cubic-bezier(0.22,1,0.36,1)_1] rounded-full motion-reduce:animate-none"
           >
-          </span>
+            <div
+              class="absolute inset-0 rounded-full group-hover:animate-[spin_700ms_cubic-bezier(0.22,1,0.36,1)_1] motion-reduce:animate-none"
+            >
+              <span class="absolute right-0 bottom-3 h-4 w-4 rounded-full border-4 border-graphite bg-acid"></span>
+            </div>
+          </div>
         </div>
 
         <p class="mt-7 font-mono text-[11px] font-semibold tracking-[0.22em] text-acid uppercase">
@@ -76,7 +81,7 @@ import { links, profile, socialLinks } from '@/data/links';
       </header>
 
       <nav class="mt-10" aria-label="Enlaces principales">
-        <h2 class="sr-only">Consultoría, artículos y blog</h2>
+        <h2 class="sr-only">Consultoría, LinkedIn y blog</h2>
         <ul class="flex flex-col gap-3">
           {
             links.map((link) => (
@@ -87,18 +92,11 @@ import { links, profile, socialLinks } from '@/data/links';
                   rel={link.newTab || link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                   class:list={[
                     'group flex min-h-20 items-center gap-4 rounded-2xl border px-4 py-4 transition duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transform-none motion-reduce:transition-none sm:px-5',
-                    link.featured
-                      ? 'border-acid bg-void hover:bg-steel'
-                      : 'border-steel bg-void hover:border-smoke hover:bg-steel',
+                    'border-steel bg-void hover:border-smoke hover:bg-steel',
                   ]}
                 >
                   <span
-                    class:list={[
-                      'flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border',
-                      link.featured
-                        ? 'border-acid bg-graphite'
-                        : 'border-steel bg-graphite',
-                    ]}
+                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-steel bg-graphite transition-colors group-hover:border-smoke motion-reduce:transition-none"
                   >
                     <Icon name={link.icon} size={21} class="h-5 w-5" />
                   </span>

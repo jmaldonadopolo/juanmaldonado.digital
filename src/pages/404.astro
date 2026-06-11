@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import logo from '@/assets/logo.svg';
+import Icon from '@/components/Icon.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const title = 'Página no encontrada';
+const description =
+  'La página solicitada no existe o fue movida. Regresa al perfil de Juan Maldonado o explora el blog.';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogTitle="404 · Página no encontrada"
+  type="website"
+  noindex
+  nofollow
+  structuredData={false}
+>
+  <main
+    id="main"
+    class="relative mx-auto flex min-h-dvh w-full max-w-3xl items-center px-5 py-8 sm:px-8 sm:py-12"
+  >
+    <section
+      class="relative w-full overflow-hidden rounded-[2rem] border border-steel bg-graphite px-5 py-8 shadow-2xl shadow-black/40 sm:px-10 sm:py-11"
+      aria-labelledby="error-title"
+    >
+      <div
+        aria-hidden="true"
+        class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-acid/60 to-transparent"
+      >
+      </div>
+
+      <header class="flex items-center justify-between">
+        <span class="font-mono text-[10px] tracking-[0.24em] text-smoke uppercase">
+          Error de navegación
+        </span>
+        <a
+          href="/"
+          aria-label="Ir al perfil de Juan Maldonado"
+          class="flex min-h-11 items-center rounded-md px-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid"
+        >
+          <Image
+            src={logo}
+            alt=""
+            width={50}
+            loading="eager"
+            class="h-auto w-10 sm:w-12"
+          />
+        </a>
+      </header>
+
+      <div class="py-12 text-center sm:py-16">
+        <p
+          aria-hidden="true"
+          class="font-display text-8xl font-bold leading-none tracking-[-0.08em] text-bone sm:text-9xl"
+        >
+          404<span class="text-acid">.</span>
+        </p>
+        <p class="mt-7 font-mono text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">
+          Ruta no disponible
+        </p>
+        <h1
+          id="error-title"
+          class="mt-4 font-display text-3xl font-bold tracking-[-0.035em] text-bone sm:text-4xl"
+        >
+          Esta página no existe
+        </h1>
+        <p class="mx-auto mt-5 max-w-lg text-[15px] font-light leading-7 text-smoke sm:text-base">
+          Es posible que el enlace haya cambiado o que la dirección no sea correcta. Puedes volver al perfil o continuar leyendo el blog.
+        </p>
+      </div>
+
+      <nav class="grid gap-3 border-t border-steel pt-7 sm:grid-cols-2" aria-label="Opciones para continuar">
+        <a
+          href="/"
+          class="group flex min-h-16 items-center justify-between gap-4 rounded-2xl border border-acid bg-void px-4 py-3.5 transition duration-200 hover:-translate-y-0.5 hover:bg-steel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transform-none motion-reduce:transition-none"
+        >
+          <span>
+            <span class="block font-display text-sm font-semibold text-bone">Volver al inicio</span>
+            <span class="mt-1 block text-xs font-light text-smoke">Perfil y enlaces principales</span>
+          </span>
+          <Icon name="arrow-up-right" size={16} class="h-4 w-4 -rotate-135" />
+        </a>
+
+        <a
+          href="/blog/"
+          class="group flex min-h-16 items-center justify-between gap-4 rounded-2xl border border-steel bg-void px-4 py-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-smoke hover:bg-steel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transform-none motion-reduce:transition-none"
+        >
+          <span>
+            <span class="block font-display text-sm font-semibold text-bone">Explorar el blog</span>
+            <span class="mt-1 block text-xs font-light text-smoke">Tecnología y negocio digital</span>
+          </span>
+          <Icon name="arrow-up-right" size={16} class="h-4 w-4" />
+        </a>
+      </nav>
+    </section>
+  </main>
+</BaseLayout>

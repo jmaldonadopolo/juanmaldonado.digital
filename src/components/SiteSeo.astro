@@ -1,5 +1,7 @@
 ---
+import { getImage } from 'astro:assets';
 import { SEO } from 'astro-seo';
+import avatar from '@/assets/avatar-profile.png';
 import {
   buildStructuredData,
   SITE_URL,
@@ -18,7 +20,7 @@ export interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   tags?: string[];
-  structuredData?: StructuredData[];
+  structuredData?: StructuredData[] | false;
 }
 
 const {
@@ -38,15 +40,27 @@ const {
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE_URL).toString();
 const imageUrl = new URL(ogImage, Astro.site ?? SITE_URL).toString();
-const twitterUsername = '@jmaldonadopolo';
-const jsonLd = buildStructuredData({
-  canonical,
-  imageUrl,
-  imageAlt,
-  title,
-  description,
-  page: structuredData,
+const personImage = await getImage({
+  src: avatar,
+  width: 512,
+  height: 512,
+  fit: 'cover',
+  format: 'webp',
 });
+const personImageUrl = new URL(personImage.src, Astro.site ?? SITE_URL).toString();
+const twitterUsername = '@jmaldonadopolo';
+const jsonLd =
+  structuredData === false
+    ? undefined
+    : buildStructuredData({
+        canonical,
+        imageUrl,
+        personImageUrl,
+        imageAlt,
+        title,
+        description,
+        page: structuredData,
+      });
 ---
 
 <SEO
@@ -119,5 +133,11 @@ const jsonLd = buildStructuredData({
   }}
 />
 
-<!-- astro-seo genera metaetiquetas; Schema.org requiere JSON-LD independiente. -->
-<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+{
+  jsonLd && (
+    <>
+      <!-- astro-seo genera metaetiquetas; Schema.org requiere JSON-LD independiente. -->
+      <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    </>
+  )
+}

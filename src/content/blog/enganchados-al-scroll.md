@@ -6,7 +6,6 @@ image: "../../assets/blog/enganchados-al-scroll.jpg"
 imageAlt: "Ilustración de una persona absorta por la luz de su teléfono móvil"
 sourceUrl: "https://www.linkedin.com/pulse/enganchados-al-scroll-c%25C3%25B3mo-la-ia-de-las-redes-afecta-y-juan-pwp5c/"
 tags: ["Inteligencia artificial", "Redes sociales", "Salud digital"]
-featured: true
 readingTime: "2 min"
 ---
 

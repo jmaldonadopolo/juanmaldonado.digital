@@ -14,7 +14,7 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   tags?: string[];
-  structuredData?: Record<string, unknown>[];
+  structuredData?: Record<string, unknown>[] | false;
 }
 
 const {
@@ -74,7 +74,7 @@ const {
 
     <div
       aria-hidden="true"
-      class="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.014)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.014)_1px,transparent_1px)] bg-[size:56px_56px]"
+      class="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.014)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.014)_1px,transparent_1px)] bg-size-[56px_56px]"
     >
     </div>
     <slot />

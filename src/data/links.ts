@@ -1,7 +1,6 @@
 export type LinkIcon =
   | 'calendar'
   | 'linkedin'
-  | 'article'
   | 'blog';
 
 export type Link = {
@@ -10,7 +9,6 @@ export type Link = {
   href: string;
   action: string;
   icon: LinkIcon;
-  featured?: boolean;
   newTab?: boolean;
 };
 
@@ -27,7 +25,6 @@ export const links: Link[] = [
     href: 'https://calendly.com/juanmaldonadopolo/30min',
     action: 'Reservar',
     icon: 'calendar',
-    featured: true,
   },
   {
     title: 'Conectar con LinkedIn',
@@ -35,13 +32,6 @@ export const links: Link[] = [
     href: 'https://www.linkedin.com/in/juanmaldonadopolo',
     action: 'Conectar',
     icon: 'linkedin',
-  },
-  {
-    title: 'En busca del equilibrio',
-    description: 'Cómo la privacidad y las notificaciones impactan en la ansiedad y el enfoque',
-    href: 'https://www.linkedin.com/pulse/en-busca-del-equilibrio-c%25C3%25B3mo-la-privacidad-y-las-el-maldonado-polo-9hzre/',
-    action: 'Leer',
-    icon: 'article',
   },
   {
     title: 'Blog',

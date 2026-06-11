@@ -6,7 +6,6 @@ image: "../../assets/blog/en-busca-del-equilibrio.jpg"
 imageAlt: "Retrato conceptual sobre equilibrio mental, privacidad y concentración"
 sourceUrl: "https://www.linkedin.com/pulse/en-busca-del-equilibrio-c%25C3%25B3mo-la-privacidad-y-las-el-maldonado-polo-9hzre/"
 tags: ["Privacidad", "Notificaciones", "Salud mental", "Productividad"]
-featured: true
 readingTime: "2 min"
 ---
 

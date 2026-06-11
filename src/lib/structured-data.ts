@@ -16,6 +16,7 @@ const socialProfiles = [
 interface StructuredDataOptions {
   canonical: string;
   imageUrl: string;
+  personImageUrl: string;
   imageAlt: string;
   title: string;
   description: string;
@@ -25,6 +26,7 @@ interface StructuredDataOptions {
 export function buildStructuredData({
   canonical,
   imageUrl,
+  personImageUrl,
   imageAlt,
   title,
   description,
@@ -63,12 +65,6 @@ export function buildStructuredData({
         {
           '@type': 'ListItem',
           position: 3,
-          name: 'Artículo: En busca del equilibrio',
-          url: 'https://www.linkedin.com/pulse/en-busca-del-equilibrio-c%25C3%25B3mo-la-privacidad-y-las-el-maldonado-polo-9hzre/',
-        },
-        {
-          '@type': 'ListItem',
-          position: 4,
           name: 'Blog de Juan Maldonado',
           url: `${SITE_URL}blog/`,
         },
@@ -88,7 +84,7 @@ export function buildStructuredData({
         description:
           'Tecnología, sistemas, inteligencia artificial y negocio digital para emprender con criterio.',
         jobTitle: 'Consultor de tecnología y negocio digital',
-        image: `${SITE_URL}miniatura-social.jpg`,
+        image: personImageUrl,
         knowsAbout: [
           'Tecnología',
           'Negocio digital',
