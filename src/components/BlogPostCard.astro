@@ -10,7 +10,7 @@ interface Props {
 }
 
 const { post, priority = false } = Astro.props;
-const date = post.data.pubDate.toLocaleDateString('es-CO', {
+const date = post.data.pubDate.toLocaleDateString('es-PE', {
   day: '2-digit',
   month: 'short',
   year: 'numeric',

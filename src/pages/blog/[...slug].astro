@@ -33,7 +33,7 @@ const socialImage = await getImage({
 const imageUrl = new URL(socialImage.src, siteUrl).toString();
 const publishedTime = post.data.pubDate.toISOString();
 const modifiedTime = (post.data.updatedDate ?? post.data.pubDate).toISOString();
-const formattedDate = post.data.pubDate.toLocaleDateString('es-CO', {
+const formattedDate = post.data.pubDate.toLocaleDateString('es-PE', {
   day: '2-digit',
   month: 'long',
   year: 'numeric',
@@ -49,7 +49,7 @@ const structuredData = [
     description: post.data.description,
     datePublished: publishedTime,
     dateModified: modifiedTime,
-    inLanguage: 'es-CO',
+    inLanguage: 'es-PE',
     isPartOf: { '@id': `${siteUrl}#website` },
     primaryImageOfPage: { '@id': `${canonical}#primary-image` },
     breadcrumb: { '@id': `${canonical}#breadcrumb` },
@@ -64,11 +64,11 @@ const structuredData = [
     datePublished: publishedTime,
     dateModified: modifiedTime,
     author: { '@id': `${siteUrl}#person` },
-    publisher: { '@id': `${siteUrl}#person` },
+    publisher: { '@id': `${siteUrl}#organization` },
     mainEntityOfPage: { '@id': `${canonical}#webpage` },
     isPartOf: { '@id': `${siteUrl}#website` },
     image: { '@id': `${canonical}#primary-image` },
-    inLanguage: 'es-CO',
+    inLanguage: 'es-PE',
     keywords: post.data.tags,
     articleSection: 'Blog',
     wordCount: (post.body ?? '').split(/\s+/).filter(Boolean).length,

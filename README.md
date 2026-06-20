@@ -222,7 +222,7 @@ Decisiones implementadas:
 - Aviso accesible en enlaces que abren una pestaña nueva.
 - Migas de pan semánticas en artículos.
 - Soporte para `prefers-reduced-motion`.
-- `lang="es-CO"`.
+- `lang="es-PE"`.
 
 ## Rendimiento
 

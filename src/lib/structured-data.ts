@@ -3,9 +3,11 @@ export type StructuredData = Record<string, unknown>;
 export const SITE_URL = 'https://juanmaldonado.digital/';
 export const PERSON_ID = `${SITE_URL}#person`;
 export const WEBSITE_ID = `${SITE_URL}#website`;
+export const ORGANIZATION_ID = `${SITE_URL}#organization`;
 
 const socialProfiles = [
   'https://www.linkedin.com/in/juanmaldonadopolo/',
+  'https://juanmaldonadopolo.substack.com/',
   'https://www.instagram.com/jmaldonadopolo/',
   'https://twitter.com/jmaldonadopolo',
   'https://www.threads.net/@jmaldonadopolo',
@@ -40,7 +42,7 @@ export function buildStructuredData({
       url: canonical,
       name: title,
       description,
-      inLanguage: 'es-CO',
+      inLanguage: 'es-PE',
       isPartOf: { '@id': WEBSITE_ID },
       mainEntity: { '@id': PERSON_ID },
       primaryImageOfPage: { '@id': primaryImageId },
@@ -95,6 +97,14 @@ export function buildStructuredData({
         sameAs: socialProfiles,
       },
       {
+        '@type': 'Organization',
+        '@id': ORGANIZATION_ID,
+        name: 'Juan Maldonado',
+        url: SITE_URL,
+        logo: personImageUrl,
+        sameAs: socialProfiles,
+      },
+      {
         '@type': 'WebSite',
         '@id': WEBSITE_ID,
         url: SITE_URL,
@@ -102,8 +112,8 @@ export function buildStructuredData({
         alternateName: 'juanmaldonado.digital',
         description:
           'Tecnología, sistemas, inteligencia artificial y negocio digital para emprender con criterio.',
-        inLanguage: 'es-CO',
-        publisher: { '@id': PERSON_ID },
+        inLanguage: 'es-PE',
+        publisher: { '@id': ORGANIZATION_ID },
       },
       {
         '@type': 'ImageObject',

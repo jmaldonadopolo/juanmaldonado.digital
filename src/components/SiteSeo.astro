@@ -49,6 +49,9 @@ const personImage = await getImage({
 });
 const personImageUrl = new URL(personImage.src, Astro.site ?? SITE_URL).toString();
 const twitterUsername = '@jmaldonadopolo';
+const SEO_TITLE_LIMIT = 50;
+const shouldUseTemplate = title.length <= SEO_TITLE_LIMIT;
+const effectiveTitle = shouldUseTemplate ? title : title;
 const jsonLd =
   structuredData === false
     ? undefined
@@ -65,8 +68,8 @@ const jsonLd =
 
 <SEO
   charset="UTF-8"
-  title={title}
-  titleTemplate="%s | Juan Maldonado"
+  title={effectiveTitle}
+  titleTemplate={shouldUseTemplate ? '%s | Juan Maldonado' : undefined}
   titleDefault="Juan Maldonado | Tecnología y negocio digital"
   description={description}
   canonical={canonical}
@@ -82,7 +85,7 @@ const jsonLd =
     },
     optional: {
       description,
-      locale: 'es_CO',
+      locale: 'es_PE',
       siteName: 'Juan Maldonado',
     },
     image: {
@@ -119,16 +122,10 @@ const jsonLd =
       { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
       { rel: 'shortcut icon', href: '/favicon.ico' },
       { rel: 'manifest', href: '/site.webmanifest' },
+      { rel: 'alternate', type: 'application/rss+xml', title: 'Blog de Juan Maldonado', href: '/rss.xml' },
     ],
     meta: [
       { name: 'author', content: 'Juan Maldonado' },
-      ...(type === 'profile'
-        ? [
-            { property: 'profile:first_name', content: 'Juan' },
-            { property: 'profile:last_name', content: 'Maldonado' },
-            { property: 'profile:username', content: 'jmaldonadopolo' },
-          ]
-        : []),
     ],
   }}
 />
