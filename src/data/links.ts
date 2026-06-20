@@ -1,7 +1,7 @@
 export type LinkIcon =
-  | 'calendar'
+  | 'lucide:calendar'
   | 'linkedin'
-  | 'blog';
+  | 'lucide:book-open';
 
 export type Link = {
   title: string;
@@ -24,7 +24,7 @@ export const links: Link[] = [
     description: 'Reserva una sesión estratégica en Calendly',
     href: 'https://calendly.com/juanmaldonadopolo/30min',
     action: 'Reservar',
-    icon: 'calendar',
+    icon: 'lucide:calendar',
   },
   {
     title: 'Conectar con LinkedIn',
@@ -38,7 +38,7 @@ export const links: Link[] = [
     description: 'Ideas sobre tecnología, negocio digital y sistemas',
     href: '/blog',
     action: 'Explorar',
-    icon: 'blog',
+    icon: 'lucide:book-open',
     newTab: true,
   },
 ];
@@ -50,28 +50,33 @@ export const socialLinks = [
     icon: 'linkedin',
   },
   {
+    name: 'Substack',
+    href: 'https://juanmaldonadopolo.substack.com/',
+    icon: 'simple:substack',
+  },
+  {
     name: 'Instagram',
     href: 'https://www.instagram.com/jmaldonadopolo/',
-    icon: 'instagram',
+    icon: 'simple:instagram',
   },
   {
     name: 'X',
     href: 'https://twitter.com/jmaldonadopolo',
-    icon: 'x',
+    icon: 'simple:x',
   },
   {
     name: 'Threads',
     href: 'https://www.threads.net/@jmaldonadopolo',
-    icon: 'threads',
+    icon: 'simple:threads',
   },
   {
     name: 'Facebook',
     href: 'https://www.facebook.com/juanmaldonadopolo',
-    icon: 'facebook',
+    icon: 'simple:facebook',
   },
   {
     name: 'TikTok',
     href: 'https://www.tiktok.com/@jmaldonadopolo',
-    icon: 'tiktok',
+    icon: 'simple:tiktok',
   },
 ] as const;

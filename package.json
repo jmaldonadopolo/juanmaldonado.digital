@@ -17,6 +17,8 @@
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.4",
     "astro-seo": "^1.1.0",
+    "lucide": "^1.21.0",
+    "simple-icons": "^16.23.0",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {

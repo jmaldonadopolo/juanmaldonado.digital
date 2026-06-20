@@ -2,7 +2,7 @@
 title: "Considera Astro en lugar de WordPress para el sitio web de tu marca"
 description: "He pasado los últimos años construyendo sitios web para marcas de empresas de todo tipo y evaluando qué tecnología responde mejor a cada proyecto."
 pubDate: 2024-05-08
-image: "../../assets/blog/considera-astro-wordpress.jpg"
+image: "../../assets/blog/considera-astro-en-lugar-de-wordpress.png"
 imageAlt: "Portada de Astro con el texto Build the web you want"
 sourceUrl: "https://www.linkedin.com/pulse/considera-astro-en-lugar-de-wordpress-para-el-sitio-maldonado-polo-6l1jc/"
 tags: ["Astro", "WordPress", "Desarrollo web", "Tecnología"]

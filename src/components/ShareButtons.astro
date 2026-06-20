@@ -14,12 +14,12 @@ const encodedMessage = encodeURIComponent(`${title} ${url}`);
 const networks = [
   {
     name: 'Facebook',
-    icon: 'facebook',
+    icon: 'simple:facebook',
     href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
   },
   {
     name: 'X',
-    icon: 'x',
+    icon: 'simple:x',
     href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
   },
   {
@@ -29,7 +29,7 @@ const networks = [
   },
   {
     name: 'WhatsApp',
-    icon: 'whatsapp',
+    icon: 'simple:whatsapp',
     href: `https://wa.me/?text=${encodedMessage}`,
   },
 ] as const;

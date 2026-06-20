@@ -2,7 +2,7 @@
 title: "Enganchados al Scroll: Cómo la IA de las redes sociales afecta nuestra mente y calidad de vida"
 description: "El motor de recomendación de las redes sociales utiliza inteligencia artificial para capturar nuestra atención y está afectando nuestra calidad de vida."
 pubDate: 2025-06-04
-image: "../../assets/blog/enganchados-al-scroll.jpg"
+image: "../../assets/blog/enganchados-al-scroll.png"
 imageAlt: "Ilustración de una persona absorta por la luz de su teléfono móvil"
 sourceUrl: "https://www.linkedin.com/pulse/enganchados-al-scroll-c%25C3%25B3mo-la-ia-de-las-redes-afecta-y-juan-pwp5c/"
 tags: ["Inteligencia artificial", "Redes sociales", "Salud digital"]

@@ -2,7 +2,7 @@
 title: "En Busca del Equilibrio: Cómo la Privacidad y las Notificaciones Impactan en la Ansiedad y el Enfoque"
 description: "La privacidad y la gestión de notificaciones juegan un papel crucial en nuestra salud mental y en nuestra capacidad para concentrarnos."
 pubDate: 2024-06-08
-image: "../../assets/blog/en-busca-del-equilibrio.jpg"
+image: "../../assets/blog/en-busca-del-equilibrio.png"
 imageAlt: "Retrato conceptual sobre equilibrio mental, privacidad y concentración"
 sourceUrl: "https://www.linkedin.com/pulse/en-busca-del-equilibrio-c%25C3%25B3mo-la-privacidad-y-las-el-maldonado-polo-9hzre/"
 tags: ["Privacidad", "Notificaciones", "Salud mental", "Productividad"]

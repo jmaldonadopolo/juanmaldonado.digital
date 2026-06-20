@@ -1,58 +1,83 @@
 ---
-import arrowUpRight from '@/assets/icons/arrow-up-right.svg';
-import blog from '@/assets/icons/blog.svg';
-import calendar from '@/assets/icons/calendar.svg';
-import facebook from '@/assets/icons/facebook.svg';
-import instagram from '@/assets/icons/instagram.svg';
+import * as lucide from 'lucide';
+import {
+  siSubstack,
+  siInstagram,
+  siX,
+  siThreads,
+  siFacebook,
+  siTiktok,
+  siWhatsapp,
+} from 'simple-icons';
 import linkedin from '@/assets/icons/linkedin.svg';
-import threads from '@/assets/icons/threads.svg';
-import tiktok from '@/assets/icons/tiktok.svg';
-import whatsapp from '@/assets/icons/whatsapp.svg';
-import x from '@/assets/icons/x.svg';
+
+const simpleIcons = {
+  substack: siSubstack,
+  instagram: siInstagram,
+  x: siX,
+  threads: siThreads,
+  facebook: siFacebook,
+  tiktok: siTiktok,
+  whatsapp: siWhatsapp,
+} as const;
+
+const localIcons: Record<string, string> = {
+  linkedin: linkedin.src,
+};
+
+export type IconName = string;
 
 type Props = {
-  name:
-    | 'arrow-up-right'
-    | 'blog'
-    | 'calendar'
-    | 'facebook'
-    | 'instagram'
-    | 'linkedin'
-    | 'threads'
-    | 'tiktok'
-    | 'whatsapp'
-    | 'x';
+  name: IconName;
   size?: number;
   class?: string;
 };
 
-const {
-  name,
-  size = 18,
-  class: className = '',
-} = Astro.props;
+const { name, size = 18, class: className = '' } = Astro.props;
 
-const icons = {
-  'arrow-up-right': arrowUpRight,
-  blog,
-  calendar,
-  facebook,
-  instagram,
-  linkedin,
-  threads,
-  tiktok,
-  whatsapp,
-  x,
+const toPascal = (value: string): string =>
+  value
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+
+const renderLucide = (key: string): string => {
+  const data = (lucide.icons as Record<string, Array<[string, Record<string, string>]>>)[key];
+  if (!data) {
+    throw new Error(`Lucide icon not found: ${key}`);
+  }
+  const inner = data
+    .map(([tag, attrs]) => {
+      const attrsStr = Object.entries(attrs)
+        .filter(([k]) => k !== 'key')
+        .map(([k, v]) => `${k}="${v}"`)
+        .join(' ');
+      return `<${tag} ${attrsStr}/>`;
+    })
+    .join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="${size}" height="${size}" class="${className}" aria-hidden="true">${inner}</svg>`;
 };
 
-const icon = icons[name];
----
+const renderSimple = (key: keyof typeof simpleIcons): string => {
+  const data = simpleIcons[key];
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="${size}" height="${size}" class="${className}" aria-hidden="true"><path d="${data.path}"/></svg>`;
+};
 
-<img
-  src={icon.src}
-  alt=""
-  width={size}
-  height={size}
-  class={className}
-  aria-hidden="true"
-/>
+const renderLocal = (key: string): string => {
+  const src = localIcons[key];
+  if (!src) {
+    throw new Error(`Local icon not found: ${key}`);
+  }
+  return `<img src="${src}" alt="" width="${size}" height="${size}" class="${className}" aria-hidden="true" />`;
+};
+
+let svg = '';
+if (name.startsWith('lucide:')) {
+  svg = renderLucide(toPascal(name.slice('lucide:'.length)));
+} else if (name.startsWith('simple:')) {
+  svg = renderSimple(name.slice('simple:'.length) as keyof typeof simpleIcons);
+} else {
+  svg = renderLocal(name);
+}
+---
+<Fragment set:html={svg} />
