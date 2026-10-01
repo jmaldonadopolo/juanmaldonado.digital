@@ -102,9 +102,7 @@ Los tokens están definidos en `src/styles/global.css` mediante `@theme`:
 
 Tipografías:
 
-- Geist: texto general y referencia principal de marca.
-- Space Grotesk: títulos.
-- JetBrains Mono: etiquetas, metadatos y elementos técnicos.
+- Plus Jakarta Sans: familia tipográfica única para cuerpo, títulos, etiquetas y metadatos.
 
 No añadir CSS personalizado si una utilidad o token de Tailwind resuelve el caso. Las clases deben usar sintaxis canónica de Tailwind 4 siempre que exista.
 

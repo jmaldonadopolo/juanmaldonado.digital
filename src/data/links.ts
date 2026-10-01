@@ -10,6 +10,7 @@ export type Link = {
   action: string;
   icon: LinkIcon;
   newTab?: boolean;
+  primary?: boolean;
 };
 
 export const profile = {
@@ -25,6 +26,7 @@ export const links: Link[] = [
     href: 'https://calendly.com/juanmaldonadopolo/30min',
     action: 'Reservar',
     icon: 'lucide:calendar',
+    primary: true,
   },
   {
     title: 'Conectar con LinkedIn',

@@ -28,18 +28,18 @@ const description =
     >
       <div
         aria-hidden="true"
-        class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-acid/60 to-transparent"
+        class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-electric/60 to-transparent"
       >
       </div>
 
       <header class="flex items-center justify-between">
-        <span class="font-mono text-[10px] tracking-[0.24em] text-smoke uppercase">
+        <span class="font-sans text-[10px] tracking-[0.24em] text-smoke uppercase">
           Error de navegación
         </span>
         <a
           href="/"
           aria-label="Ir al perfil de Juan Maldonado"
-          class="flex min-h-11 items-center rounded-md px-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid"
+          class="flex min-h-11 items-center rounded-md px-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric"
         >
           <Image
             src={logo}
@@ -54,16 +54,16 @@ const description =
       <div class="py-12 text-center sm:py-16">
         <p
           aria-hidden="true"
-          class="font-display text-8xl font-bold leading-none tracking-[-0.08em] text-bone sm:text-9xl"
+          class="font-sans text-8xl font-bold leading-none tracking-[-0.08em] text-bone sm:text-9xl"
         >
-          404<span class="text-acid">.</span>
+          404<span class="text-electric">.</span>
         </p>
-        <p class="mt-7 font-mono text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">
+        <p class="mt-7 font-sans text-[10px] font-semibold tracking-[0.22em] text-electric uppercase">
           Ruta no disponible
         </p>
         <h1
           id="error-title"
-          class="mt-4 font-display text-3xl font-bold tracking-[-0.035em] text-bone sm:text-4xl"
+          class="mt-4 font-sans text-3xl font-bold tracking-[-0.035em] text-bone sm:text-4xl"
         >
           Esta página no existe
         </h1>
@@ -75,10 +75,10 @@ const description =
       <nav class="grid gap-3 border-t border-steel pt-7 sm:grid-cols-2" aria-label="Opciones para continuar">
         <a
           href="/"
-          class="group flex min-h-16 items-center justify-between gap-4 rounded-2xl border border-acid bg-void px-4 py-3.5 transition duration-200 hover:-translate-y-0.5 hover:bg-steel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transform-none motion-reduce:transition-none"
+          class="group flex min-h-16 items-center justify-between gap-4 rounded-2xl border border-electric bg-void px-4 py-3.5 transition duration-200 hover:-translate-y-0.5 hover:bg-steel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric motion-reduce:transform-none motion-reduce:transition-none"
         >
           <span>
-            <span class="block font-display text-sm font-semibold text-bone">Volver al inicio</span>
+            <span class="block font-sans text-sm font-semibold text-bone">Volver al inicio</span>
             <span class="mt-1 block text-xs font-light text-smoke">Perfil y enlaces principales</span>
           </span>
           <Icon name="lucide:arrow-up-right" size={16} class="h-4 w-4 -rotate-135" />
@@ -86,10 +86,10 @@ const description =
 
         <a
           href="/blog/"
-          class="group flex min-h-16 items-center justify-between gap-4 rounded-2xl border border-steel bg-void px-4 py-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-smoke hover:bg-steel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transform-none motion-reduce:transition-none"
+          class="group flex min-h-16 items-center justify-between gap-4 rounded-2xl border border-steel bg-void px-4 py-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-smoke hover:bg-steel focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric motion-reduce:transform-none motion-reduce:transition-none"
         >
           <span>
-            <span class="block font-display text-sm font-semibold text-bone">Explorar el blog</span>
+            <span class="block font-sans text-sm font-semibold text-bone">Explorar el blog</span>
             <span class="mt-1 block text-xs font-light text-smoke">Tecnología y negocio digital</span>
           </span>
           <Icon name="lucide:arrow-up-right" size={16} class="h-4 w-4" />
