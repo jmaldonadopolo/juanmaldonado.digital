@@ -25,7 +25,26 @@ const localIcons: Record<string, string> = {
   linkedin: linkedin.src,
 };
 
-export type IconName = 'lucide:arrow-up-right' | 'lucide:book-open' | 'lucide:calendar' | 'simple:facebook' | 'simple:instagram' | 'simple:substack' | 'simple:threads' | 'simple:tiktok' | 'simple:whatsapp' | 'simple:x' | 'linkedin';
+export type IconName =
+  | 'lucide:arrow-up-right'
+  | 'lucide:book-open'
+  | 'lucide:briefcase-business'
+  | 'lucide:calendar'
+  | 'lucide:check'
+  | 'lucide:mail'
+  | 'lucide:menu'
+  | 'lucide:panels-top-left'
+  | 'lucide:target'
+  | 'lucide:workflow'
+  | 'lucide:x'
+  | 'simple:facebook'
+  | 'simple:instagram'
+  | 'simple:substack'
+  | 'simple:threads'
+  | 'simple:tiktok'
+  | 'simple:whatsapp'
+  | 'simple:x'
+  | 'linkedin';
 
 type Props = {
   name: IconName;

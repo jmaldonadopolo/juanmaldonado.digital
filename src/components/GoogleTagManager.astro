@@ -1,0 +1,31 @@
+---
+const containerId = import.meta.env.GTM_CONTAINER_ID?.trim() ?? '';
+const isValidContainerId = /^GTM-[A-Z0-9]+$/.test(containerId);
+
+if (containerId && !isValidContainerId) {
+  throw new Error('GTM_CONTAINER_ID debe tener el formato GTM-XXXXXXXX.');
+}
+
+const cloudflarePages = import.meta.env.CF_PAGES;
+const enabled =
+  import.meta.env.PROD &&
+  import.meta.env.GTM_ENABLED === 'true' &&
+  isValidContainerId &&
+  (!cloudflarePages || cloudflarePages === '1');
+
+const initialization = `window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());`;
+---
+
+{
+  enabled && (
+    <>
+      <link rel="preconnect" href="https://www.googletagmanager.com" />
+      <script
+        async
+        is:inline
+        src={`https://www.googletagmanager.com/gtm.js?id=${containerId}`}
+      ></script>
+      <script is:inline set:html={initialization}></script>
+    </>
+  )
+}

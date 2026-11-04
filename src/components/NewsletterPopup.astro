@@ -1,0 +1,319 @@
+---
+import Icon from '@/components/Icon.astro';
+
+const siteKey = import.meta.env.DEV ? '1x00000000000000000000AA' : '0x4AAAAAAFzD7spF2poFGz6Z';
+const isBlog = Astro.url.pathname.startsWith('/blog');
+---
+
+<dialog
+  data-newsletter-dialog
+  data-newsletter-auto={Astro.url.pathname === '/' ? 'true' : undefined}
+  aria-labelledby="newsletter-title"
+  class="fixed inset-x-3 bottom-3 top-auto m-0 max-h-[calc(100dvh-1.5rem)] w-auto max-w-xl overflow-y-auto rounded-2xl border border-steel bg-graphite p-0 text-bone shadow-2xl shadow-black/60 backdrop:bg-void/75 sm:inset-x-6 sm:bottom-6"
+>
+  <div class="flex items-center justify-between border-b border-steel px-4 py-3 font-mono text-[11px] text-smoke sm:px-5">
+    <span>juanmaldonado.digital <span aria-hidden="true">/</span> newsletter</span>
+    <button
+      type="button"
+      data-newsletter-close
+      aria-label="Cerrar formulario de suscripción"
+      class="inline-flex h-9 min-w-9 items-center justify-center rounded-lg text-smoke transition-colors hover:bg-steel hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid"
+    >
+      <Icon name="lucide:x" size={16} class="h-4 w-4" />
+    </button>
+  </div>
+
+  <div class="grid gap-5 p-5 sm:p-7">
+    <div>
+      <p class="text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">Newsletter</p>
+      <h2 id="newsletter-title" class="mt-2 font-sans text-xl font-semibold tracking-[-0.025em] text-bone sm:text-2xl">
+        Ideas para pensar lo digital con más contexto.
+      </h2>
+      <p class="mt-2 max-w-lg text-sm leading-6 text-smoke">
+        Una carta ocasional sobre tecnología, IA, negocio digital y aprendizajes propios. Sin frecuencia fija ni ruido.
+      </p>
+    </div>
+
+    <form data-site-form data-form-type="newsletter" action="/api/forms" method="post" class="grid gap-4">
+      <label class="sr-only" aria-hidden="true">
+        No completar
+        <input name="website" type="text" tabindex="-1" autocomplete="off" />
+      </label>
+      <label for="newsletter-email" class="grid gap-2 text-xs font-medium text-bone">
+        Correo electrónico
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          required
+          maxlength="254"
+          placeholder="tu@correo.com"
+          class="min-h-12 w-full rounded-xl border border-steel bg-void px-4 text-sm font-normal text-bone outline-none transition placeholder:text-smoke/80 focus-visible:border-acid focus-visible:ring-2 focus-visible:ring-acid/20"
+        />
+      </label>
+      <label class="flex items-start gap-2.5 text-[11px] leading-5 text-smoke">
+        <input name="consent" type="checkbox" value="yes" required class="mt-1 size-4 shrink-0 accent-[var(--color-acid)]" />
+        <span>Acepto recibir esta newsletter y que mi correo se use únicamente para este fin.</span>
+      </label>
+      {siteKey ? (
+        <div data-turnstile-widget data-sitekey={siteKey} data-action="newsletter_signup" class="min-h-0"></div>
+      ) : (
+        <p class="text-xs text-smoke" role="status">La suscripción no está disponible en este momento.</p>
+      )}
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p data-form-status class="text-xs leading-5 text-smoke" role="status" aria-live="polite">
+          Puedes darte de baja solicitándolo por correo.
+        </p>
+        <button
+          type="submit"
+          disabled={!siteKey}
+          class="group inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-acid px-5 text-sm font-semibold text-void transition-colors hover:bg-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
+        >
+          Suscribirme
+          <Icon name="lucide:arrow-up-right" size={15} class="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none" />
+        </button>
+      </div>
+    </form>
+
+    <div data-newsletter-success hidden class="rounded-xl border border-acid/30 bg-acid/5 p-4" role="status" aria-live="polite">
+      <p class="font-semibold text-bone">Solicitud enviada.</p>
+      <p class="mt-1 text-sm leading-6 text-smoke">Recibí tu correo y gestionaré tu incorporación a la newsletter. Gracias por sumarte.</p>
+    </div>
+    <p class="text-[10px] leading-4 text-smoke/80">Protegido contra envíos automatizados con Cloudflare Turnstile.</p>
+  </div>
+</dialog>
+
+{isBlog && (
+  <button
+    type="button"
+    data-newsletter-open
+    class="fixed bottom-4 left-4 z-30 inline-flex min-h-11 items-center gap-2 rounded-full border border-steel bg-graphite/95 px-4 text-xs font-semibold text-bone shadow-xl shadow-black/30 backdrop-blur transition-colors hover:border-acid/60 hover:bg-acid/10 hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none sm:bottom-6 sm:left-6"
+  >
+    <Icon name="lucide:mail" size={15} class="h-4 w-4" />
+    Newsletter
+  </button>
+)}
+
+<script>
+  type TurnstileApi = {
+    ready: (callback: () => void) => void;
+    render: (target: HTMLElement, options: Record<string, unknown>) => string;
+    reset: (widgetId?: string) => void;
+  };
+
+  declare global {
+    interface Window {
+      turnstile?: TurnstileApi;
+    }
+  }
+
+  const dialog = document.querySelector<HTMLDialogElement>('[data-newsletter-dialog]');
+  const closeButton = document.querySelector<HTMLButtonElement>('[data-newsletter-close]');
+  const newsletterForm = document.querySelector<HTMLFormElement>('[data-form-type="newsletter"]');
+  const successPanel = document.querySelector<HTMLElement>('[data-newsletter-success]');
+  const openButtons = document.querySelectorAll<HTMLButtonElement>('[data-newsletter-open]');
+  const turnstileWidgets = new WeakMap<HTMLElement, string>();
+  const dismissedUntilKey = 'jm-newsletter-dismissed-until';
+  const lastShownKey = 'jm-newsletter-last-shown';
+  const subscribedKey = 'jm-newsletter-subscribed';
+  const fourteenDays = 14 * 24 * 60 * 60 * 1000;
+  const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+  let turnstileLoad: Promise<TurnstileApi> | undefined;
+
+  function showStatus(form: HTMLFormElement, message: string, isError = false) {
+    const status = form.querySelector<HTMLElement>('[data-form-status]');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('text-red-300', isError);
+    status.classList.toggle('text-acid', !isError);
+  }
+
+  function loadTurnstile() {
+    if (turnstileLoad) return turnstileLoad;
+
+    turnstileLoad = new Promise((resolve, reject) => {
+      let script = document.querySelector<HTMLScriptElement>('script[src^="https://challenges.cloudflare.com/turnstile/v0/api.js"]');
+      const onLoad = () => window.turnstile ? resolve(window.turnstile) : reject(new Error('Turnstile no disponible.'));
+      const onError = () => reject(new Error('No se pudo cargar la verificación.'));
+
+      if (script) {
+        if (script.dataset.loaded === 'true') {
+          onLoad();
+        } else {
+          script.addEventListener('load', onLoad, { once: true });
+          script.addEventListener('error', onError, { once: true });
+        }
+        return;
+      }
+
+      script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      script.addEventListener('load', () => {
+        script!.dataset.loaded = 'true';
+        onLoad();
+      }, { once: true });
+      script.addEventListener('error', onError, { once: true });
+      document.head.append(script);
+    });
+    return turnstileLoad;
+  }
+
+  async function renderTurnstile(form: HTMLFormElement) {
+    const widget = form.querySelector<HTMLElement>('[data-turnstile-widget]');
+    if (!widget || turnstileWidgets.has(widget)) return;
+    try {
+      const api = await loadTurnstile();
+      if (turnstileWidgets.has(widget)) return;
+      const widgetId = api.render(widget, {
+        sitekey: widget.dataset.sitekey,
+        action: widget.dataset.action,
+        theme: 'dark',
+        callback: () => showStatus(form, 'Verificación completada. Ya puedes enviar el formulario.'),
+        'expired-callback': () => showStatus(form, 'La verificación venció. Complétala nuevamente.', true),
+        'error-callback': () => showStatus(form, 'No se pudo cargar la verificación. Actualiza la página e inténtalo otra vez.', true),
+      });
+      turnstileWidgets.set(widget, widgetId);
+    } catch {
+      showStatus(form, 'No se pudo cargar la verificación. Actualiza la página e inténtalo otra vez.', true);
+    }
+  }
+
+  function openNewsletter() {
+    if (!dialog || dialog.open) return;
+    try {
+      localStorage.setItem(lastShownKey, String(Date.now()));
+    } catch {
+      // The dialog remains available when browser storage is disabled.
+    }
+    dialog.showModal();
+    newsletterForm?.querySelector<HTMLInputElement>('[name="email"]')?.focus({ preventScroll: true });
+    if (newsletterForm) void renderTurnstile(newsletterForm);
+  }
+
+  function closeNewsletter() {
+    if (!dialog?.open) return;
+    dialog.close();
+    try {
+      localStorage.setItem(dismissedUntilKey, String(Date.now() + thirtyDays));
+    } catch {
+      // The close action still works if browser storage is disabled.
+    }
+  }
+
+  openButtons.forEach((button) => button.addEventListener('click', openNewsletter));
+  closeButton?.addEventListener('click', closeNewsletter);
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) closeNewsletter();
+  });
+
+  if (newsletterForm && dialog) {
+    dialog.addEventListener('close', () => {
+      if (!newsletterForm.dataset.sent) {
+        const widget = newsletterForm.querySelector<HTMLElement>('[data-turnstile-widget]');
+        const widgetId = widget ? turnstileWidgets.get(widget) : undefined;
+        if (widgetId) window.turnstile?.reset(widgetId);
+      }
+    });
+
+    newsletterForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!newsletterForm.reportValidity()) return;
+      const submit = newsletterForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const token = newsletterForm.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value;
+      if (!token) {
+        showStatus(newsletterForm, 'Completa la verificación antes de suscribirte.', true);
+        return;
+      }
+
+      if (submit) submit.disabled = true;
+      showStatus(newsletterForm, 'Enviando solicitud…');
+      const values = new FormData(newsletterForm);
+      try {
+        const response = await fetch(newsletterForm.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            type: 'newsletter',
+            token,
+            website: values.get('website'),
+            fields: { email: values.get('email'), consent: values.get('consent') },
+          }),
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'No se pudo completar la suscripción.');
+
+        newsletterForm.dataset.sent = 'true';
+        newsletterForm.hidden = true;
+        if (successPanel) successPanel.hidden = false;
+        try {
+          localStorage.setItem(subscribedKey, 'true');
+        } catch {
+          // The success state remains available without browser storage.
+        }
+      } catch (error) {
+        showStatus(newsletterForm, error instanceof Error ? error.message : 'No se pudo completar la suscripción.', true);
+        const widget = newsletterForm.querySelector<HTMLElement>('[data-turnstile-widget]');
+        const widgetId = widget ? turnstileWidgets.get(widget) : undefined;
+        if (widgetId) window.turnstile?.reset(widgetId);
+      } finally {
+        if (submit && !newsletterForm.dataset.sent) submit.disabled = false;
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-site-form]:not([data-form-type="newsletter"])').forEach((form) => {
+    void renderTurnstile(form);
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+      const token = form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value;
+      if (!token) {
+        showStatus(form, 'Completa la verificación antes de enviar.', true);
+        return;
+      }
+
+      if (submit) submit.disabled = true;
+      showStatus(form, 'Enviando solicitud…');
+      const values = new FormData(form);
+      const fields: Record<string, string> = {};
+      values.forEach((value, name) => {
+        if (name !== 'website' && typeof value === 'string') fields[name] = value.trim();
+      });
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ type: form.dataset.formType, token, website: values.get('website'), fields }),
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) throw new Error(result.message || 'No se pudo enviar la solicitud.');
+        showStatus(form, 'Solicitud enviada. Redirigiendo…');
+        window.location.assign('/envio-exitoso/');
+      } catch (error) {
+        showStatus(form, error instanceof Error ? error.message : 'No se pudo enviar la solicitud.', true);
+        const widget = form.querySelector<HTMLElement>('[data-turnstile-widget]');
+        const widgetId = widget ? turnstileWidgets.get(widget) : undefined;
+        if (widgetId) window.turnstile?.reset(widgetId);
+        if (submit) submit.disabled = false;
+      }
+    });
+  });
+
+  if (dialog?.dataset.newsletterAuto === 'true') window.setTimeout(() => {
+    try {
+      const now = Date.now();
+      const dismissedUntil = Number(localStorage.getItem(dismissedUntilKey) || 0);
+      const lastShown = Number(localStorage.getItem(lastShownKey) || 0);
+      const subscribed = localStorage.getItem(subscribedKey) === 'true';
+      if (!subscribed && now > dismissedUntil && now - lastShown > fourteenDays) {
+        openNewsletter();
+      }
+    } catch {
+      // Avoid forcing a recurring popup when storage is unavailable.
+    }
+  }, 0);
+</script>

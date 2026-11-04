@@ -1,0 +1,25 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import AboutButton from '@/components/about/AboutButton.astro';
+import Icon from '@/components/Icon.astro';
+
+const title = 'Solicitud enviada | Juan Maldonado';
+const description = 'La solicitud fue enviada correctamente a Juan Maldonado.';
+---
+
+<BaseLayout title={title} description={description} noindex nofollow type="website">
+  <main id="main" class="relative z-10 mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center px-5 py-16 text-center sm:px-8">
+    <div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-acid/30 bg-acid/10 text-acid">
+      <Icon name="lucide:check" size={26} class="h-7 w-7" />
+    </div>
+    <p class="mt-7 text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">Mensaje recibido</p>
+    <h1 class="mt-3 font-sans text-3xl font-semibold tracking-[-0.035em] text-bone sm:text-5xl">Gracias por escribir.</h1>
+    <p class="mt-4 max-w-xl text-sm leading-7 text-smoke sm:text-base">
+      Revisaré el contexto y responderé al correo que compartiste. Si prefieres, puedes agendar una conversación de 30 minutos.
+    </p>
+    <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+      <AboutButton href="/" variant="secondary">Volver al inicio</AboutButton>
+      <AboutButton href="https://calendly.com/juanmaldonadopolo/30min" newTab>Agendar 30 minutos</AboutButton>
+    </div>
+  </main>
+</BaseLayout>

@@ -21,12 +21,14 @@ Los artículos se consultan desde `/blog/`; no se duplican como botones individu
 
 ## Stack
 
-- Astro 6 con generación estática.
+- Astro 7.4.5 con generación estática y Vite 8.
 - TypeScript estricto.
 - Tailwind CSS 4 mediante `@tailwindcss/vite`.
 - `@tailwindcss/typography` para el cuerpo de los artículos.
 - Astro Content Collections para gestionar el blog.
 - `astro:assets` para imágenes locales optimizadas.
+- Astro Fonts API para descargar, alojar y precargar Plus Jakarta Sans desde el sitio.
+- Prefetch integrado de Astro, limitado a enlaces internos relevantes al hover/foco.
 - `astro-seo` para metadatos, Open Graph y Twitter Cards.
 - `@astrojs/sitemap` para generar el sitemap.
 
@@ -67,13 +69,15 @@ src/
 │   ├── blog/                 Portadas originales de los artículos
 │   ├── icons/                Iconos SVG locales
 │   ├── avatar-profile.png    Avatar principal
+│   ├── miniatura-social.jpg  Miniatura social general
 │   └── logo.svg              Logotipo JM
 ├── components/
 │   ├── BlogPostCard.astro    Tarjeta del índice
 │   ├── AuthorBadge.astro     Firma del autor en tarjetas y artículos
 │   ├── Icon.astro            Registro central de iconos
 │   ├── ShareButtons.astro    Enlaces sociales para compartir artículos
-│   └── SiteSeo.astro         Integración central de astro-seo
+│   ├── SiteSeo.astro         Integración central de astro-seo
+│   └── GoogleTagManager.astro GTM condicional para producción
 ├── content/blog/             Artículos Markdown
 ├── data/links.ts             Perfil, CTA, enlaces y redes
 ├── layouts/
@@ -102,7 +106,7 @@ Los tokens están definidos en `src/styles/global.css` mediante `@theme`:
 
 Tipografías:
 
-- Plus Jakarta Sans: familia tipográfica única para cuerpo, títulos, etiquetas y metadatos.
+- Plus Jakarta Sans: familia variable configurada en `astro.config.mjs` con `fontProviders.google()` y usada desde Tailwind mediante `--font-plus-jakarta-sans`. Astro la sirve localmente y la precarga desde `BaseLayout.astro`; no se consulta Google Fonts desde el navegador.
 
 No añadir CSS personalizado si una utilidad o token de Tailwind resuelve el caso. Las clases deben usar sintaxis canónica de Tailwind 4 siempre que exista.
 
@@ -195,6 +199,15 @@ El dominio canónico se configura en `astro.config.mjs`:
 https://juanmaldonado.digital
 ```
 
+### Google Tag Manager
+
+La carga del contenedor se controla con variables de entorno de build:
+
+- `GTM_CONTAINER_ID`: ID público del contenedor, con formato `GTM-XXXXXXXX`.
+- `GTM_ENABLED`: debe ser `true` para cargar GTM; también se requiere un build de producción.
+
+El componente `src/components/GoogleTagManager.astro` sigue el bloque de instalación mostrado para este contenedor: script asíncrono de `gtm.js` más inicialización de `dataLayer`, inmediatamente después de abrir `<head>`. No agrega el `noscript` del modo clásico para evitar mezclar dos variantes de instalación. El tracking permanece desactivado en desarrollo y solo se incluye en build de producción con `GTM_ENABLED=true`, `GTM_CONTAINER_ID` válido y, para Cloudflare Pages, `CF_PAGES=1`. Configura las variables solo en el entorno Production; no las definas en Preview ni en `.env` local salvo que necesites tracking local deliberadamente.
+
 ### Página 404
 
 `src/pages/404.astro` genera `dist/404.html` para que el proveedor de hosting la utilice ante rutas inexistentes.
@@ -226,12 +239,13 @@ Decisiones implementadas:
 
 - Salida completamente estática.
 - Sin framework cliente ni hidratación JavaScript.
-- Imágenes responsivas mediante `astro:assets`.
+- Avatar, logotipos, portadas y miniatura Open Graph procesados con `astro:assets`; las portadas se entregan en formatos y tamaños adaptados al contexto.
 - La primera portada del índice y la portada del artículo se priorizan.
 - Las demás portadas usan carga diferida.
-- Fuentes cargadas desde el `<head>` con conexiones anticipadas.
+- La fuente principal se aloja en `/_astro/fonts/` y se precarga porque se usa en el contenido inicial.
+- Los enlaces internos de navegación y tarjetas de artículos usan el prefetch de Astro con estrategia `hover`; los enlaces externos y el resto de rutas no se descargan por adelantado.
 - Sitemap, robots y manifest generados o servidos como archivos estáticos.
-- El build publicado no contiene archivos JavaScript.
+- No se hidratan frameworks de UI; Astro añade un pequeño runtime para la precarga de navegación.
 - El artefacto estático completo pesa aproximadamente 1.66 MB en el estado auditado.
 
 ## Enlaces configurados
@@ -287,7 +301,7 @@ Además, comprobar:
 Última auditoría:
 
 - `astro check`: 0 errores, 0 advertencias y 0 sugerencias.
-- `astro build`: 6 páginas estáticas generadas correctamente, 5 indexables y la página `404.html`.
+- `astro build`: 9 páginas HTML estáticas generadas correctamente para perfil, blog, 6 artículos y `404.html`; `rss.xml` y sitemap adicionales.
 - `404.html` queda fuera del sitemap.
 - Portada, índice y artículo verificados a 360 px sin desbordamiento horizontal.
 - Canonicals, Open Graph, Twitter Cards, sitemap y JSON-LD verificados en el HTML final.
@@ -298,9 +312,7 @@ Además, comprobar:
 
 ## Estado conocido de dependencias
 
-`npm audit` reporta vulnerabilidades moderadas sin corrección disponible en `yaml-language-server`, dependencia transitiva de las herramientas de comprobación incluidas por `astro-seo`.
-
-El sitio se genera como HTML estático y ese servidor de lenguaje no se incluye en los archivos publicados. No aplicar `npm audit fix --force`, porque no existe una corrección compatible confirmada y podría romper la cadena de Astro.
+`npm audit --omit=dev` reporta dos vulnerabilidades moderadas relacionadas con `postcss-selector-parser` (<6.1.5), fijado en `6.0.10` por `@tailwindcss/typography@0.5.20` ([aviso](https://github.com/advisories/GHSA-rj75-hqrm-r3gf)). `npm audit fix --force` propone degradar Typography a `0.5.4`; no se aplicó ese cambio porque puede romper los estilos del blog. La vulnerabilidad alta de `fast-xml-parser` sí se corrigió con `npm audit fix` sin forzar cambios mayores.
 
 ## Solución de problemas en desarrollo
 
@@ -314,3 +326,22 @@ Procedimiento:
 4. Recargar la página y comprobar que las imágenes tengan dimensiones naturales válidas.
 
 No mantener dos procesos Astro sobre el puerto `4321`; puede provocar respuestas inconsistentes y dificultar el diagnóstico.
+
+## Formularios Y Newsletter
+
+El contacto y la suscripción usan POST /api/forms en una Cloudflare Pages Function, siguiendo el patrón Pages Functions + Resend de Scriptia. Antes de enviar, el servidor valida el origen, los campos, el consentimiento, el honeypot y el token con Turnstile Siteverify; también exige que coincidan el hostname y la acción. Resend notifica a hola@juanmaldonado.digital. La suscripción se notifica por correo: no se guarda en una base de datos ni se agrega a una plataforma de mailing.
+
+El popup se monta desde BaseLayout.astro para estar disponible en todo el sitio. Se abre al cargar el home (`/`) como máximo una vez cada 14 días; al cerrarlo, la aparición automática se suspende 30 días. Los disparadores manuales están en el home, flotan en el blog y aparecen en el footer de Sobre mí. Una suscripción exitosa detiene aperturas automáticas en ese navegador.
+
+El widget productivo es administrado y solo autoriza juanmaldonado.digital; localhost no está incluido en el widget real. El entorno local usa las claves de prueba públicas de Cloudflare. El endpoint /api/ queda fuera del rastreo mediante robots.txt; /envio-exitoso/ lleva noindex y se excluye del sitemap.
+
+Configurar en Cloudflare Pages, proyecto juanmaldonado-digital, Configuración > Variables y secretos > Producción:
+
+    RESEND_API_KEY=<clave de Resend>
+    RESEND_FROM_EMAIL=Juan Maldonado <hola@juanmaldonado.digital>
+    RESEND_TO_EMAIL=hola@juanmaldonado.digital
+    TURNSTILE_SECRET_KEY=<secreto del widget productivo>
+
+RESEND_API_KEY y TURNSTILE_SECRET_KEY deben ser secretos. El dominio remitente debe estar verificado en Resend. La clave de Resend compartida en la conversación se debe rotar y reemplazar en Pages; no incluir credenciales en código, archivos de ejemplo ni commits.
+
+El comando npm run dev muestra el widget con un sitekey de prueba. Astro dev no ejecuta Pages Functions; para probar POST /api/forms localmente hay que construir el sitio y usar wrangler pages dev dist con .dev.vars basado en .dev.vars.example. El ejemplo solo contiene el secreto público de prueba de Turnstile.

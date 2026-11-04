@@ -32,9 +32,9 @@ const onBlog = currentPath.startsWith('/blog');
 const onHome = currentPath === '/';
 
 const navLinkClass = (active: boolean): string => [
-  'rounded-lg px-3.5 py-2 font-sans text-[11px] tracking-wider uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric motion-reduce:transition-none',
+  'rounded-lg px-3.5 py-2 font-sans text-[11px] tracking-wider uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid motion-reduce:transition-none',
   active
-    ? 'bg-steel font-semibold text-electric'
+    ? 'bg-steel font-semibold text-acid'
     : 'text-smoke transition-colors hover:bg-steel hover:text-bone',
 ].join(' ');
 ---
@@ -55,8 +55,9 @@ const navLinkClass = (active: boolean): string => [
       <nav class="flex items-center justify-between" aria-label="Navegación del blog">
         <a
           href="/"
+          data-astro-prefetch="hover"
           aria-label="Ir al perfil de Juan Maldonado"
-          class="flex min-h-11 items-center rounded-md px-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric"
+          class="flex min-h-11 items-center rounded-md px-1 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid"
         >
           <Image
             src={logo}
@@ -70,6 +71,7 @@ const navLinkClass = (active: boolean): string => [
         <div class="flex items-center gap-1 rounded-xl border border-steel bg-graphite p-1">
           <a
             href="/blog/"
+            data-astro-prefetch="hover"
             aria-current={onBlog ? 'page' : undefined}
             class={navLinkClass(onBlog)}
           >
@@ -77,6 +79,7 @@ const navLinkClass = (active: boolean): string => [
           </a>
           <a
             href="/"
+            data-astro-prefetch="hover"
             aria-current={onHome ? 'page' : undefined}
             class={navLinkClass(onHome)}
           >
@@ -95,14 +98,14 @@ const navLinkClass = (active: boolean): string => [
       <nav aria-label="Navegación secundaria" class="flex items-center gap-4">
         <a
           href="/"
-          class="rounded-sm transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric motion-reduce:transition-none"
+          class="rounded-sm transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
         >
           Volver al inicio
         </a>
         <span aria-hidden="true" class="text-steel">·</span>
         <a
           href="/rss.xml"
-          class="rounded-sm transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric motion-reduce:transition-none"
+          class="rounded-sm transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
         >
           RSS
         </a>

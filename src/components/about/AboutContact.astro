@@ -1,0 +1,62 @@
+---
+import Icon from '@/components/Icon.astro';
+import AboutButton from '@/components/about/AboutButton.astro';
+
+const contactEmail = 'hola@juanmaldonado.digital';
+---
+
+<section id="contacto" class="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-28 bg-graphite/75 py-14 sm:py-18" aria-labelledby="contact-heading">
+  <div class="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:px-10">
+    <div class="flex flex-col items-start">
+      <p class="font-sans text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">Hablemos de tu proyecto</p>
+      <h2 id="contact-heading" class="mt-4 max-w-lg font-sans text-3xl font-semibold leading-tight tracking-[-0.035em] text-bone sm:text-4xl">
+        ¿Qué necesitas resolver?
+      </h2>
+      <p class="mt-4 max-w-md text-sm font-light leading-7 text-smoke sm:text-base">
+        Cuéntame lo esencial. Revisaremos el contexto y te responderé con un siguiente paso claro.
+      </p>
+
+      <div class="mt-7 flex flex-col items-start gap-3">
+        <AboutButton href="https://calendly.com/juanmaldonadopolo/30min" variant="secondary" newTab>Agendar 30 minutos</AboutButton>
+        <a href={`mailto:${contactEmail}`} class="inline-flex min-h-10 items-center gap-2 rounded-lg px-1 text-xs text-smoke transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid">
+          <Icon name="lucide:arrow-up-right" size={14} class="h-3.5 w-3.5" />
+          {contactEmail}
+        </a>
+      </div>
+    </div>
+
+    <form data-site-form data-form-type="contact" action="/api/forms" method="post" class="grid content-start gap-x-4 gap-y-5 sm:grid-cols-2" aria-label="Formulario de contacto">
+      <label class="sr-only" aria-hidden="true">
+        No completar
+        <input name="website" type="text" tabindex="-1" autocomplete="off" />
+      </label>
+      <label class="grid gap-2 text-xs font-medium text-bone" for="contact-name">
+        Nombre
+        <input id="contact-name" name="name" type="text" autocomplete="name" minlength="2" required placeholder="Tu nombre" class="min-h-12 w-full rounded-xl bg-void/80 px-4 text-sm font-normal text-bone outline outline-1 outline-transparent transition placeholder:text-smoke focus-visible:outline-acid" />
+      </label>
+      <label class="grid gap-2 text-xs font-medium text-bone" for="contact-email">
+        Correo electrónico
+        <input id="contact-email" name="email" type="email" autocomplete="email" required placeholder="nombre@empresa.com" class="min-h-12 w-full rounded-xl bg-void/80 px-4 text-sm font-normal text-bone outline outline-1 outline-transparent transition placeholder:text-smoke focus-visible:outline-acid" />
+      </label>
+      <label class="grid gap-2 text-xs font-medium text-bone sm:col-span-2" for="contact-company">
+        Empresa <span class="font-normal text-smoke">(opcional)</span>
+        <input id="contact-company" name="company" type="text" autocomplete="organization" placeholder="Nombre de tu empresa" class="min-h-12 w-full rounded-xl bg-void/80 px-4 text-sm font-normal text-bone outline outline-1 outline-transparent transition placeholder:text-smoke focus-visible:outline-acid" />
+      </label>
+      <label class="grid gap-2 text-xs font-medium text-bone sm:col-span-2" for="contact-message">
+        ¿Qué necesitas resolver?
+        <textarea id="contact-message" name="message" rows="4" minlength="10" required placeholder="Describe brevemente tu reto o proyecto" class="w-full resize-y rounded-xl bg-void/80 px-4 py-3 text-sm font-normal leading-6 text-bone outline outline-1 outline-transparent transition placeholder:text-smoke focus-visible:outline-acid"></textarea>
+      </label>
+      <label class="flex items-start gap-2.5 text-[11px] leading-5 text-smoke sm:col-span-2">
+        <input name="consent" type="checkbox" value="yes" required class="mt-1 size-4 shrink-0 accent-[var(--color-acid)]" />
+        <span>Acepto que mis datos se utilicen para responder esta solicitud.</span>
+      </label>
+      <div class="sm:col-span-2">
+        <div data-turnstile-widget data-action="contact_request" data-sitekey={import.meta.env.DEV ? '1x00000000000000000000AA' : '0x4AAAAAAFzD7spF2poFGz6Z'}></div>
+      </div>
+      <div class="flex flex-col items-start gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+        <p class="max-w-sm text-[11px] leading-5 text-smoke" data-form-status role="status" aria-live="polite">Tus datos se enviarán de forma segura para atender tu consulta.</p>
+        <AboutButton type="submit" class="sm:min-w-52">Enviar solicitud</AboutButton>
+      </div>
+    </form>
+  </div>
+</section>

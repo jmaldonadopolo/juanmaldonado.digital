@@ -1,0 +1,58 @@
+---
+import Icon from '@/components/Icon.astro';
+
+const areas = [
+  {
+    icon: 'lucide:panels-top-left',
+    title: 'Presencia y desarrollo web',
+    description:
+      'Sitios y experiencias digitales que explican mejor tu propuesta y facilitan que un cliente potencial dé el siguiente paso.',
+    detail: 'Web · Contenido · Conversión',
+  },
+  {
+    icon: 'lucide:workflow',
+    title: 'Automatización e IA aplicada',
+    description:
+      'Identificar tareas repetitivas y evaluar herramientas que simplifiquen procesos reales, con un objetivo claro antes de implementarlas.',
+    detail: 'Procesos · Herramientas · IA',
+  },
+  {
+    icon: 'lucide:target',
+    title: 'Prioridad y estrategia digital',
+    description:
+      'Ordenar oportunidades, elegir qué abordar primero y evitar inversiones en tecnología que no responde a una necesidad concreta.',
+    detail: 'Diagnóstico · Prioridades · Ruta',
+  },
+] as const;
+---
+
+<section id="enfoque" class="scroll-mt-28 py-16 sm:py-20" aria-labelledby="focus-heading">
+  <div class="mb-8 flex flex-col justify-between gap-5 sm:mb-10 sm:flex-row sm:items-end">
+    <div>
+      <p class="font-sans text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">En qué puedo aportar</p>
+      <h2 id="focus-heading" class="mt-3 max-w-xl font-sans text-3xl font-semibold leading-tight tracking-[-0.035em] text-bone sm:text-4xl">
+        Tecnología útil para el siguiente paso.
+      </h2>
+    </div>
+    <p class="max-w-lg text-sm font-light leading-6 text-smoke sm:text-base">
+      Primero entendemos qué necesita mejorar; después elegimos una solución que tenga sentido para el negocio.
+    </p>
+  </div>
+
+  <div class="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        areas.map((area) => (
+          <article class="group relative flex min-h-56 flex-col rounded-2xl bg-graphite/55 p-5 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-1 hover:bg-graphite hover:shadow-xl hover:shadow-black/20 motion-reduce:transform-none motion-reduce:transition-none">
+              <div class="flex items-center gap-3">
+              <span class="flex h-10 w-10 items-center justify-center rounded-full bg-acid/10 text-acid transition duration-300 group-hover:scale-110 group-hover:bg-acid group-hover:text-void motion-reduce:transform-none motion-reduce:transition-none">
+                <Icon name={area.icon} size={18} class="h-[18px] w-[18px]" />
+              </span>
+              <span class="font-sans text-[9px] font-semibold tracking-[0.18em] text-acid uppercase">{area.detail}</span>
+              </div>
+            <h3 class="mt-5 font-sans text-base font-semibold tracking-tight text-bone sm:text-lg">{area.title}</h3>
+            <p class="mt-2 flex-1 text-sm font-light leading-6 text-smoke">{area.description}</p>
+          </article>
+        ))
+      }
+  </div>
+</section>

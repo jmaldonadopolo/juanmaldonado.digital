@@ -1,0 +1,28 @@
+---
+import Icon from '@/components/Icon.astro';
+import { Image } from 'astro:assets';
+import scitechLogo from '@/assets/logo-grupo-scitech.svg';
+---
+
+<section id="scitech" class="relative left-1/2 w-screen -translate-x-1/2 scroll-mt-28 bg-graphite/60 py-8 sm:py-10" aria-labelledby="scitech-heading">
+  <div class="mx-auto grid max-w-6xl items-center gap-6 px-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-10 sm:px-8 lg:px-10">
+    <div class="flex items-start gap-4 sm:gap-5">
+      <span class="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-acid/10 text-acid transition-colors hover:bg-acid hover:text-void">
+        <Icon name="lucide:briefcase-business" size={18} class="h-[18px] w-[18px]" />
+      </span>
+      <div class="max-w-2xl">
+        <p class="font-sans text-[10px] font-semibold tracking-[0.2em] text-acid uppercase">Experiencia empresarial</p>
+        <h2 id="scitech-heading" class="mt-2 font-sans text-lg font-semibold tracking-tight text-bone sm:text-xl">Fundador de Grupo Scitech</h2>
+        <p class="mt-2 text-sm font-light leading-6 text-smoke">Trabajo conectado con las necesidades operativas y digitales de las organizaciones.</p>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center justify-between gap-5 sm:justify-end">
+      <Image src={scitechLogo} alt="Grupo Scitech" width={180} height={29} class="h-auto w-36 brightness-0 invert sm:w-40" />
+      <a href="https://gruposcitech.com" target="_blank" rel="noopener noreferrer" class="group inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-void/70 px-4 font-sans text-xs font-medium text-bone transition-colors hover:bg-acid hover:text-void focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none">
+        Conocer Scitech <Icon name="lucide:arrow-up-right" size={14} class="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        <span class="sr-only"> (se abre en una pestaña nueva)</span>
+      </a>
+    </div>
+  </div>
+</section>

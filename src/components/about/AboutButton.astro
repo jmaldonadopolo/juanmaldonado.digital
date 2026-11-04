@@ -1,0 +1,47 @@
+---
+import Icon from '@/components/Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary';
+  size?: 'regular' | 'compact';
+  newTab?: boolean;
+  type?: 'button' | 'submit';
+  fullWidth?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'regular',
+  newTab = false,
+  type = 'button',
+  fullWidth = false,
+  class: className = '',
+} = Astro.props;
+
+const baseClass = 'group inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-center font-sans text-sm font-semibold transition duration-200 ease-out hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transform-none motion-reduce:transition-none';
+const variants = {
+  primary: 'bg-acid text-void shadow-lg shadow-acid/10 hover:bg-bone hover:shadow-acid/20',
+  secondary: 'bg-graphite text-bone hover:bg-steel hover:text-acid',
+};
+const sizes = {
+  regular: 'min-h-12 px-5',
+  compact: 'min-h-10 px-4 text-[13px]',
+};
+const classes = `${baseClass} ${variants[variant]} ${sizes[size]} ${fullWidth ? 'w-full' : ''} ${className}`;
+---
+
+{href ? (
+  <a href={href} target={newTab ? '_blank' : undefined} rel={newTab ? 'noopener noreferrer' : undefined} class={classes}>
+    <slot />
+    <Icon name="lucide:arrow-up-right" size={16} class="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none" />
+    {newTab && <span class="sr-only"> (se abre en una pestaña nueva)</span>}
+  </a>
+) : (
+  <button type={type} class={classes}>
+    <slot />
+    <Icon name="lucide:arrow-up-right" size={16} class="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transition-none" />
+  </button>
+)}

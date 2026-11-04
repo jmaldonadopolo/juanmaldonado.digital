@@ -1,6 +1,7 @@
 # robots.txt
 User-agent: *
 Allow: /
+Disallow: /api/
 
 # Sitemap
 Sitemap: https://juanmaldonado.digital/sitemap-index.xml

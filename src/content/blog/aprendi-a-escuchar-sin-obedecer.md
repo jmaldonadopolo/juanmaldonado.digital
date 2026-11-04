@@ -1,6 +1,6 @@
 ---
 title: "Aprendí a escuchar sin obedecer"
-description: "Durante mucho tiempo cometí un error que probablemente todavía cometo algunas veces."
+description: "Una reflexión sobre cómo separar la crítica útil del ruido, escuchar distintas opiniones y tomar decisiones propias sin buscar la aprobación de todos."
 pubDate: 2026-09-13
 image: "../../assets/blog/aprendi-a-escuchar-sin-obedecer.png"
 imageAlt: "Retrato conceptual de Juan Maldonado reflexionando entre opiniones y notificaciones"

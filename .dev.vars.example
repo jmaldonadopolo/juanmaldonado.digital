@@ -1,0 +1,8 @@
+# Turnstile public test credentials for local-only function testing.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+TURNSTILE_TEST_MODE=true
+
+# Add a newly rotated Resend key to the ignored .dev.vars file only if testing email delivery locally.
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=Juan Maldonado <hola@juanmaldonado.digital>
+RESEND_TO_EMAIL=hola@juanmaldonado.digital

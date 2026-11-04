@@ -1,0 +1,40 @@
+---
+import AboutApproach from '@/components/about/AboutApproach.astro';
+import AboutContact from '@/components/about/AboutContact.astro';
+import AboutFocus from '@/components/about/AboutFocus.astro';
+import AboutHero from '@/components/about/AboutHero.astro';
+import AboutScitech from '@/components/about/AboutScitech.astro';
+import AboutTestimonials from '@/components/about/AboutTestimonials.astro';
+import AboutLayout from '@/layouts/AboutLayout.astro';
+import { SITE_URL } from '@/lib/structured-data';
+
+const siteUrl = Astro.site?.toString() ?? SITE_URL;
+const canonical = new URL('/sobre-mi/', siteUrl).toString();
+const title = 'Juan Maldonado | Soluciones digitales para empresas';
+const description =
+  'Empresario tecnológico, consultor en soluciones digitales y fundador de Grupo Scitech. Conversemos sobre desarrollo web, automatización e inteligencia artificial aplicada.';
+
+const structuredData = [
+  {
+    '@type': 'AboutPage',
+    '@id': `${canonical}#about`,
+    url: canonical,
+    name: title,
+    description,
+    inLanguage: 'es-PE',
+    isPartOf: { '@id': `${siteUrl}#website` },
+    mainEntity: { '@id': `${siteUrl}#person` },
+  },
+];
+---
+
+<AboutLayout title={title} description={description} structuredData={structuredData}>
+  <div class="relative">
+    <AboutHero />
+    <AboutScitech />
+    <AboutFocus />
+    <AboutApproach />
+    <AboutTestimonials />
+    <AboutContact />
+  </div>
+</AboutLayout>

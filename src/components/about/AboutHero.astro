@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import portrait from '@/assets/about-portrait.png';
+import AboutButton from '@/components/about/AboutButton.astro';
+---
+
+<section class="grid items-center gap-10 pb-14 pt-12 sm:pb-20 sm:pt-16 lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-16 lg:pb-20">
+  <div class="relative z-10 max-w-3xl">
+    <p class="flex items-center gap-2 font-sans text-[10px] font-semibold tracking-[0.22em] text-acid uppercase">
+      <span class="h-1.5 w-1.5 rounded-full bg-acid"></span>
+      Empresario tecnológico · Consultor digital
+    </p>
+
+    <h1 class="mt-5 max-w-2xl font-sans text-4xl font-bold leading-[1.08] tracking-[-0.045em] text-bone sm:text-5xl lg:text-[3.5rem]">
+      Que la tecnología resuelva algo importante para tu negocio.
+    </h1>
+
+    <p class="mt-5 max-w-2xl text-base font-light leading-7 text-smoke sm:text-lg sm:leading-8">
+      Ayudo a empresas y profesionales a ordenar sus retos digitales y convertirlos en proyectos concretos: presencia web, automatización e inteligencia artificial aplicada con criterio.
+    </p>
+
+    <div class="mt-7 grid w-full max-w-xl gap-3 sm:grid-cols-2">
+      <AboutButton href="https://calendly.com/juanmaldonadopolo/30min" newTab fullWidth variant="primary">Hablemos de tu proyecto</AboutButton>
+      <AboutButton href="#enfoque" fullWidth variant="secondary">Ver áreas de trabajo</AboutButton>
+    </div>
+
+    <p class="mt-3 text-xs leading-5 text-smoke">Primera conversación de 30 minutos, sin costo ni compromiso.</p>
+  </div>
+
+  <div class="group relative mx-auto flex w-36 flex-col sm:w-40 lg:w-48">
+    <div aria-hidden="true" class="absolute -inset-2 rotate-3 rounded-2xl border border-acid/25 transition-transform duration-500 group-hover:rotate-0 motion-reduce:transition-none"></div>
+    <div class="relative overflow-hidden rounded-xl border border-steel bg-graphite p-1.5 shadow-xl shadow-black/25">
+      <Image
+        src={portrait}
+        alt="Juan Maldonado en un retrato de estudio"
+        width={320}
+        height={400}
+        format="webp"
+        quality={78}
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[4/5] w-full rounded-lg object-cover object-center"
+      />
+    </div>
+    <p class="mt-3 text-center font-sans text-[9px] font-medium tracking-[0.18em] text-smoke uppercase">Tecnología + negocio</p>
+  </div>
+</section>

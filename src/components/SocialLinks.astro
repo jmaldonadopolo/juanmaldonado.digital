@@ -1,0 +1,50 @@
+---
+import Icon from '@/components/Icon.astro';
+import { socialLinks } from '@/data/links';
+
+interface Props {
+  variant?: 'profile' | 'compact';
+}
+
+const { variant = 'profile' } = Astro.props;
+const isCompact = variant === 'compact';
+---
+
+<nav class={isCompact ? 'flex items-center justify-center' : 'mt-9 border-t border-steel pt-7'} aria-label="Redes sociales">
+  <h2 class="sr-only">Redes sociales de Juan Maldonado</h2>
+  <ul class:list={['flex flex-wrap items-center justify-center', isCompact ? 'gap-1 sm:gap-1.5' : 'gap-2.5 sm:gap-3']}>
+    {socialLinks.map((social) => (
+      <li>
+        <a
+          href={social.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${social.name} (se abre en una pestaña nueva)`}
+          class:list={[
+            'group relative flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-acid/10 hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid motion-reduce:transition-none',
+            isCompact
+              ? 'h-11 w-11 text-smoke/80'
+              : 'h-11 w-11 rounded-lg border border-steel bg-void text-bone hover:border-acid/70 hover:bg-steel/50 focus-visible:outline-offset-4',
+          ]}
+        >
+          <Icon
+            name={social.icon}
+            size={isCompact ? (social.icon === 'linkedin' ? 25 : 20) : (social.icon === 'linkedin' ? 26 : 22)}
+            class={isCompact
+              ? social.icon === 'linkedin'
+                ? 'h-[25px] w-[25px] opacity-80 transition-opacity group-hover:opacity-100'
+                : 'h-5 w-5 opacity-80 transition-opacity group-hover:opacity-100'
+              : social.icon === 'linkedin'
+                ? 'h-[26px] w-[26px] opacity-75 transition-opacity group-hover:opacity-100'
+                : 'h-[22px] w-[22px] opacity-75 transition-opacity group-hover:opacity-100'}
+          />
+          {isCompact && (
+            <span class="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-graphite px-2 py-1 font-sans text-[10px] font-medium text-bone opacity-0 shadow-lg shadow-black/30 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none">
+              {social.name}
+            </span>
+          )}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

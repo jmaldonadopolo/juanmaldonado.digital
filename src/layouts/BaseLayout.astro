@@ -1,5 +1,8 @@
 ---
 import '@/styles/global.css';
+import { Font } from 'astro:assets';
+import GoogleTagManager from '@/components/GoogleTagManager.astro';
+import NewsletterPopup from '@/components/NewsletterPopup.astro';
 import SiteSeo from '@/components/SiteSeo.astro';
 
 interface Props {
@@ -20,7 +23,7 @@ interface Props {
 const {
   title = 'Tecnología y negocio digital',
   description = 'Herramientas, consultoría y contenidos sobre tecnología, sistemas y negocio digital para emprender con criterio en la era digital.',
-  ogImage = '/miniatura-social.jpg',
+  ogImage,
   imageAlt = 'Logotipo JM de Juan Maldonado y dominio juanmaldonado.digital',
   ogTitle = title,
   noindex = false,
@@ -40,7 +43,8 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0b1220" />
+    <meta name="theme-color" content="#090909" />
+    <GoogleTagManager />
 
     <SiteSeo
       title={title}
@@ -57,17 +61,12 @@ const {
       structuredData={pageStructuredData}
     />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap"
-    />
+    <Font cssVariable="--font-plus-jakarta-sans" preload />
   </head>
-  <body class="relative min-h-dvh overflow-x-hidden bg-void font-sans text-bone antialiased selection:bg-electric selection:text-void">
+  <body class="relative min-h-dvh overflow-x-hidden bg-void font-sans text-bone antialiased selection:bg-acid selection:text-void">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-electric focus:px-4 focus:py-2 focus:font-semibold focus:text-void focus:shadow-lg"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-acid focus:px-4 focus:py-2 focus:font-semibold focus:text-void focus:shadow-lg"
     >
       Saltar al contenido principal
     </a>
@@ -78,5 +77,6 @@ const {
     >
     </div>
     <slot />
+    <NewsletterPopup />
   </body>
 </html>

@@ -1,7 +1,8 @@
 export type LinkIcon =
   | 'lucide:calendar'
   | 'linkedin'
-  | 'lucide:book-open';
+  | 'lucide:book-open'
+  | 'lucide:briefcase-business';
 
 export type Link = {
   title: string;
@@ -34,6 +35,13 @@ export const links: Link[] = [
     href: 'https://www.linkedin.com/in/juanmaldonadopolo',
     action: 'Conectar',
     icon: 'linkedin',
+  },
+  {
+    title: 'Sobre mí',
+    description: 'Conoce mi enfoque en soluciones digitales para empresas',
+    href: '/sobre-mi/',
+    action: 'Conocer',
+    icon: 'lucide:briefcase-business',
   },
   {
     title: 'Blog',

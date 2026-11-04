@@ -1,0 +1,116 @@
+---
+import Icon from '@/components/Icon.astro';
+import AboutButton from '@/components/about/AboutButton.astro';
+import { Image } from 'astro:assets';
+import logo from '@/assets/logo.svg';
+
+const navItems = [
+  { label: 'Enfoque', href: '#enfoque' },
+  { label: 'Método', href: '#proceso' },
+  { label: 'Grupo Scitech', href: '#scitech' },
+  { label: 'Blog', href: '/blog/' },
+];
+---
+
+<header class="sticky top-3 z-40 mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+  <nav class="flex h-14 items-center justify-between rounded-2xl border border-steel bg-graphite/95 px-4 shadow-lg shadow-black/20 backdrop-blur-xl sm:px-5" aria-label="Navegación principal">
+    <a href="/" data-astro-prefetch="hover" aria-label="Inicio, perfil de Juan Maldonado" class="flex min-h-11 items-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid">
+      <Image src={logo} alt="" width={56} loading="eager" class="h-auto w-10 sm:w-11" />
+    </a>
+
+    <div class="hidden items-center gap-6 md:flex lg:gap-7">
+      {navItems.map((item) => (
+        <a href={item.href} data-astro-prefetch={item.href.startsWith('/') ? 'hover' : undefined} class="rounded-sm text-sm font-medium text-smoke transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none">
+          {item.label}
+        </a>
+      ))}
+      <AboutButton href="https://calendly.com/juanmaldonadopolo/30min" newTab size="compact" class="ml-2 lg:ml-3">Hablemos</AboutButton>
+    </div>
+
+    <button id="about-menu-toggle" type="button" class="flex h-10 w-10 items-center justify-center rounded-lg border border-steel text-bone transition-colors hover:border-acid/40 hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="about-menu">
+      <Icon name="lucide:menu" size={20} class="h-5 w-5" />
+    </button>
+  </nav>
+
+  <div id="about-backdrop" class="pointer-events-none fixed inset-0 z-50 bg-void/70 opacity-0 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none md:hidden" aria-hidden="true"></div>
+  <aside id="about-menu" class="fixed inset-y-0 right-0 z-[60] flex h-dvh w-[min(88vw,22rem)] translate-x-full flex-col bg-graphite shadow-2xl transition-transform duration-300 ease-out motion-reduce:transition-none md:hidden" role="dialog" aria-modal="true" aria-label="Menú de navegación" aria-hidden="true" inert>
+    <div class="flex h-16 items-center justify-between px-5">
+      <a href="/" data-astro-prefetch="hover" aria-label="Volver al inicio" class="flex min-h-11 items-center"><Image src={logo} alt="" width={56} class="h-auto w-10" /></a>
+      <button id="about-menu-close" type="button" class="flex h-10 w-10 items-center justify-center rounded-lg text-smoke hover:bg-steel hover:text-bone focus-visible:outline-2 focus-visible:outline-acid" aria-label="Cerrar menú">
+        <Icon name="lucide:x" size={20} class="h-5 w-5" />
+      </button>
+    </div>
+    <nav class="flex-1 px-5 py-6" aria-label="Secciones de Sobre mí">
+      <p class="mb-3 px-2 font-sans text-[10px] font-semibold tracking-[0.2em] text-smoke uppercase">Explora</p>
+      <div class="grid gap-1">
+        {navItems.map((item) => (
+          <a href={item.href} data-astro-prefetch={item.href.startsWith('/') ? 'hover' : undefined} class="flex min-h-14 items-center justify-between gap-4 rounded-lg px-3 text-sm font-medium text-bone transition-colors hover:bg-steel hover:text-acid focus-visible:outline-2 focus-visible:outline-acid">
+            {item.label}<Icon name="lucide:arrow-up-right" size={16} class="h-4 w-4 text-smoke" />
+          </a>
+        ))}
+      </div>
+    </nav>
+    <div class="p-5">
+      <AboutButton href="https://calendly.com/juanmaldonadopolo/30min" newTab>Agendar conversación</AboutButton>
+    </div>
+  </aside>
+</header>
+
+<script is:inline>
+  (() => {
+    const toggle = document.getElementById('about-menu-toggle');
+    const menu = document.getElementById('about-menu');
+    const close = document.getElementById('about-menu-close');
+    const backdrop = document.getElementById('about-backdrop');
+    if (!toggle || !menu || !close || !backdrop) return;
+    document.body.append(backdrop, menu);
+
+    const focusables = () => [...menu.querySelectorAll('a[href], button:not([disabled])')];
+    const setBackgroundInert = (isInert) => {
+      [...document.body.children].forEach((child) => {
+        if (child !== menu && child !== backdrop) child.inert = isInert;
+      });
+    };
+    const hide = () => {
+      menu.classList.add('translate-x-full');
+      menu.classList.remove('translate-x-0');
+      menu.setAttribute('aria-hidden', 'true');
+      menu.setAttribute('inert', '');
+      backdrop.classList.add('opacity-0', 'pointer-events-none');
+      backdrop.classList.remove('opacity-100');
+      toggle.setAttribute('aria-expanded', 'false');
+      document.documentElement.style.overflow = '';
+      setBackgroundInert(false);
+      toggle.focus({ preventScroll: true });
+    };
+    const show = () => {
+      menu.classList.remove('translate-x-full');
+      menu.classList.add('translate-x-0');
+      menu.removeAttribute('inert');
+      menu.setAttribute('aria-hidden', 'false');
+      backdrop.classList.remove('opacity-0', 'pointer-events-none');
+      backdrop.classList.add('opacity-100');
+      toggle.setAttribute('aria-expanded', 'true');
+      document.documentElement.style.overflow = 'hidden';
+      setBackgroundInert(true);
+      close.focus({ preventScroll: true });
+    };
+    toggle.addEventListener('click', show);
+    close.addEventListener('click', hide);
+    backdrop.addEventListener('click', hide);
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', hide));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') hide();
+      if (event.key !== 'Tab' || toggle.getAttribute('aria-expanded') !== 'true') return;
+      const items = focusables();
+      if (!items.length) return;
+      if (event.shiftKey && document.activeElement === items[0]) {
+        event.preventDefault();
+        items.at(-1).focus();
+      } else if (!event.shiftKey && document.activeElement === items.at(-1)) {
+        event.preventDefault();
+        items[0].focus();
+      }
+    });
+  })();
+</script>

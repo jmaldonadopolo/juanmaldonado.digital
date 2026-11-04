@@ -1,0 +1,59 @@
+---
+import AboutNav from '@/components/about/AboutNav.astro';
+import SocialLinks from '@/components/SocialLinks.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  structuredData: Record<string, unknown>[];
+}
+
+const { title, description, structuredData } = Astro.props;
+
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData} type="profile">
+  <div class="relative isolate min-h-dvh pb-12">
+    <div aria-hidden="true" class="pointer-events-none fixed inset-0 z-0 bg-void"></div>
+    <div aria-hidden="true" class="pointer-events-none absolute inset-x-0 top-0 z-0 h-[48rem] overflow-hidden">
+      <div class="absolute left-1/2 top-[-12rem] h-[58rem] w-[min(120rem,150vw)] -translate-x-1/2 bg-[radial-gradient(ellipse_at_top,rgba(182,255,40,0.11),transparent_70%)]"></div>
+    </div>
+    <AboutNav />
+    <main id="main" class="relative z-10">
+      <div class="mx-auto w-full max-w-6xl px-5 sm:px-8 lg:px-10">
+        <slot />
+      </div>
+    </main>
+
+    <footer class="relative z-10 mx-auto mt-16 flex w-full max-w-6xl flex-col gap-4 px-5 py-6 text-xs text-smoke sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
+      <p>Juan Maldonado <span aria-hidden="true">·</span> Lima, Perú</p>
+      <button
+        type="button"
+        data-newsletter-open
+        class="inline-flex min-h-10 items-center gap-2 rounded-full border border-steel bg-graphite px-4 font-semibold text-bone transition-colors hover:border-acid/50 hover:bg-acid/10 hover:text-acid focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+      >
+        Newsletter
+      </button>
+      <SocialLinks variant="compact" />
+      <nav class="flex items-center gap-5" aria-label="Enlaces de pie de página">
+        <a
+          href="/"
+          data-astro-prefetch="hover"
+          class="rounded-sm transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+        >Inicio</a>
+        <a
+          href="/blog/"
+          data-astro-prefetch="hover"
+          class="rounded-sm transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+        >Blog</a>
+        <a
+          href="https://www.linkedin.com/in/juanmaldonadopolo/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="rounded-sm transition-colors hover:text-bone focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-acid motion-reduce:transition-none"
+        >LinkedIn<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+      </nav>
+    </footer>
+  </div>
+</BaseLayout>
