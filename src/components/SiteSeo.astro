@@ -2,8 +2,7 @@
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { SEO } from 'astro-seo';
-import avatar from '@/assets/avatar-profile.png';
-import defaultSocialImage from '@/assets/miniatura-social.jpg';
+import avatar from '@/assets/juan-maldonado-avatar.png';
 import {
   buildStructuredData,
   SITE_URL,
@@ -28,8 +27,8 @@ export interface Props {
 const {
   title = 'Tecnología y negocio digital',
   description = 'Herramientas, consultoría y contenidos sobre tecnología, sistemas y negocio digital para emprender con criterio en la era digital.',
-  ogImage = defaultSocialImage,
-  imageAlt = 'Logotipo JM de Juan Maldonado y dominio juanmaldonado.digital',
+  ogImage = avatar,
+  imageAlt = 'Retrato profesional de Juan Maldonado',
   ogTitle = title,
   noindex = false,
   nofollow = false,

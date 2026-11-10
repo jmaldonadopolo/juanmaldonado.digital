@@ -68,7 +68,7 @@ src/
 ├── assets/
 │   ├── blog/                 Portadas originales de los artículos
 │   ├── icons/                Iconos SVG locales
-│   ├── avatar-profile.png    Avatar principal
+│   ├── juan-maldonado-avatar.png  Avatar y foto predeterminada de metadatos
 │   ├── miniatura-social.jpg  Miniatura social general
 │   └── logo.svg              Logotipo JM
 ├── components/
@@ -331,7 +331,7 @@ No mantener dos procesos Astro sobre el puerto `4321`; puede provocar respuestas
 
 El contacto y la suscripción usan POST /api/forms en una Cloudflare Pages Function, siguiendo el patrón Pages Functions + Resend de Scriptia. Antes de enviar, el servidor valida el origen, los campos, el consentimiento, el honeypot y el token con Turnstile Siteverify; también exige que coincidan el hostname y la acción. Resend notifica a hola@juanmaldonado.digital. La suscripción se notifica por correo: no se guarda en una base de datos ni se agrega a una plataforma de mailing.
 
-El popup se monta desde BaseLayout.astro para estar disponible en todo el sitio. Se abre al cargar el home (`/`) como máximo una vez cada 14 días; al cerrarlo, la aparición automática se suspende 30 días. Los disparadores manuales están en el home, flotan en el blog y aparecen en el footer de Sobre mí. Una suscripción exitosa detiene aperturas automáticas en ese navegador.
+El popup se monta desde BaseLayout.astro para estar disponible en todo el sitio. Se abre 30 segundos después de cargar el home (`/`) como máximo una vez cada 14 días; al cerrarlo, la aparición automática se suspende 30 días. Los disparadores manuales están en el home, flotan en el blog y aparecen en el footer de Sobre mí. Una suscripción exitosa detiene aperturas automáticas en ese navegador.
 
 El widget productivo es administrado y solo autoriza juanmaldonado.digital; localhost no está incluido en el widget real. El entorno local usa las claves de prueba públicas de Cloudflare. El endpoint /api/ queda fuera del rastreo mediante robots.txt; /envio-exitoso/ lleva noindex y se excluye del sitemap.
 

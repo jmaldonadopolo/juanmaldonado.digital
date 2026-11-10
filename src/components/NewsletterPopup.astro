@@ -315,5 +315,5 @@ const isBlog = Astro.url.pathname.startsWith('/blog');
     } catch {
       // Avoid forcing a recurring popup when storage is unavailable.
     }
-  }, 0);
+  }, 30_000);
 </script>
