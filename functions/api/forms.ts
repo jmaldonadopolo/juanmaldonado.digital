@@ -1,4 +1,7 @@
+import { getNewsletterStatus, hubspotContactExists, submitNewsletter } from '../lib/hubspot.ts';
+
 interface Env {
+  HUBSPOT_ACCESS_TOKEN?: string;
   RESEND_API_KEY?: string;
   RESEND_FROM_EMAIL?: string;
   RESEND_TO_EMAIL?: string;
@@ -21,9 +24,6 @@ interface Submission {
 }
 
 const inbox = 'hola@juanmaldonado.digital';
-const hubspotPortalId = '50945344';
-const hubspotFormGuid = '0fef8795-7db3-492d-a366-b38037a3d13c';
-const hubspotMarketingSubscriptionTypeId = 1932701360;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const allowedTypes = new Set<FormType>(['contact', 'newsletter']);
 
@@ -90,49 +90,6 @@ async function sendEmail(apiKey: string, message: Record<string, unknown>) {
   }
 }
 
-async function submitNewsletterToHubSpot(email: string, request: Request) {
-  const requestUrl = new URL(request.url);
-  const referer = request.headers.get('referer');
-  let pageUri = requestUrl.origin;
-  if (referer) {
-    try {
-      const referringUrl = new URL(referer);
-      if (referringUrl.origin === requestUrl.origin) pageUri += referringUrl.pathname;
-    } catch {
-      // Ignore malformed or external referrers; form attribution is optional.
-    }
-  }
-
-  const response = await fetch(
-    `https://api.hsforms.com/submissions/v3/integration/submit/${hubspotPortalId}/${hubspotFormGuid}`,
-    {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        fields: [{ name: 'email', value: email }],
-        submittedAt: String(Date.now()),
-        context: { pageUri, pageName: 'Newsletter | juanmaldonado.digital' },
-        legalConsentOptions: {
-          consent: {
-            consentToProcess: true,
-            text: 'Acepto que mis datos se procesen para gestionar mi suscripción a la newsletter.',
-            communications: [{
-              value: true,
-              subscriptionTypeId: hubspotMarketingSubscriptionTypeId,
-              text: 'Acepto recibir la newsletter de Juan Maldonado por correo electrónico.',
-            }],
-          },
-        },
-      }),
-    },
-  );
-
-  if (!response.ok) {
-    console.error('HubSpot rejected newsletter submission', response.status);
-    throw new Error('hubspot_submission_failed');
-  }
-}
-
 export async function onRequestPost({ request, env }: PagesContext) {
   const origin = request.headers.get('origin');
   const requestUrl = new URL(request.url);
@@ -159,6 +116,11 @@ export async function onRequestPost({ request, env }: PagesContext) {
     if (name.length < 2 || message.length < 10) return json({ success: false, message: 'Completa nombre y mensaje para continuar.' }, 400);
   }
 
+  if (payload.type === 'newsletter' && !env.HUBSPOT_ACCESS_TOKEN) {
+    console.error('HUBSPOT_ACCESS_TOKEN is not configured');
+    return json({ success: false, message: 'La suscripción no está disponible. Intenta nuevamente más tarde.' }, 503);
+  }
+
   if (!env.TURNSTILE_SECRET_KEY) {
     console.error('TURNSTILE_SECRET_KEY is not configured');
     return json({ success: false, message: 'La verificación no está disponible. Intenta nuevamente más tarde.' }, 503);
@@ -175,12 +137,40 @@ export async function onRequestPost({ request, env }: PagesContext) {
   if (!verified) return json({ success: false, message: 'La verificación expiró o no fue válida. Complétala nuevamente.' }, 400);
 
   if (payload.type === 'newsletter') {
+    const normalizedEmail = email.toLowerCase();
+    const accessToken = env.HUBSPOT_ACCESS_TOKEN!;
+    const requestUrl = new URL(request.url);
+    const referer = request.headers.get('referer');
+    let pageUri = requestUrl.origin;
+    if (referer) {
+      try {
+        const referringUrl = new URL(referer);
+        if (referringUrl.origin === requestUrl.origin) pageUri += referringUrl.pathname;
+      } catch {
+        // Attribution is optional; ignore malformed or external referrers.
+      }
+    }
+    const hutk = request.headers.get('cookie')?.match(/(?:^|;\s*)hubspotutk=([^;]+)/)?.[1];
+
     try {
-      await submitNewsletterToHubSpot(email, request);
+      const existingContact = await hubspotContactExists(normalizedEmail, accessToken);
+      if (existingContact) {
+        const status = await getNewsletterStatus(normalizedEmail, accessToken);
+        if (status === 'SUBSCRIBED') {
+          return json({ success: true, alreadySubscribed: true, existingContact: true });
+        }
+      }
+
+      await submitNewsletter(normalizedEmail, {
+        pageUri,
+        pageName: 'Newsletter | juanmaldonado.digital',
+        ipAddress: request.headers.get('CF-Connecting-IP') ?? undefined,
+        hutk,
+      });
+      return json({ success: true, subscribed: true, existingContact });
     } catch {
       return json({ success: false, message: 'No pudimos registrar la suscripción. Inténtalo nuevamente en unos minutos.' }, 502);
     }
-    return json({ success: true });
   }
 
   if (!env.RESEND_API_KEY) {

@@ -77,8 +77,8 @@ const isBlog = Astro.url.pathname.startsWith('/blog');
     </form>
 
     <div data-newsletter-success hidden class="rounded-xl border border-acid/30 bg-acid/5 p-4" role="status" aria-live="polite">
-      <p class="font-semibold text-bone">Solicitud enviada.</p>
-      <p class="mt-1 text-sm leading-6 text-smoke">Tu suscripción quedó registrada. Gracias por sumarte.</p>
+      <p class="font-semibold text-bone">Gracias por sumarte.</p>
+      <p data-newsletter-success-message class="mt-1 text-sm leading-6 text-smoke">Tu suscripción quedó registrada.</p>
     </div>
     <p class="text-[10px] leading-4 text-smoke/80">Protegido contra envíos automatizados con Cloudflare Turnstile.</p>
   </div>
@@ -127,6 +127,12 @@ const isBlog = Astro.url.pathname.startsWith('/blog');
     status.textContent = message;
     status.classList.toggle('text-red-300', isError);
     status.classList.toggle('text-acid', !isError);
+  }
+
+  function resetNewsletterTurnstile() {
+    const widget = newsletterForm?.querySelector<HTMLElement>('[data-turnstile-widget]');
+    const widgetId = widget ? turnstileWidgets.get(widget) : undefined;
+    if (widgetId) window.turnstile?.reset(widgetId);
   }
 
   function loadTurnstile() {
@@ -244,9 +250,27 @@ const isBlog = Astro.url.pathname.startsWith('/blog');
         const result = await response.json();
         if (!response.ok || !result.success) throw new Error(result.message || 'No se pudo completar la suscripción.');
 
+        if (result.alreadySubscribed) {
+          showStatus(newsletterForm, 'Este correo ya está suscrito.');
+          try {
+            localStorage.setItem(subscribedKey, 'true');
+          } catch {
+            // The response remains visible when browser storage is disabled.
+          }
+          resetNewsletterTurnstile();
+          if (submit) submit.disabled = false;
+          return;
+        }
+
         newsletterForm.dataset.sent = 'true';
         newsletterForm.hidden = true;
-        if (successPanel) successPanel.hidden = false;
+        if (successPanel) {
+          successPanel.hidden = false;
+          const message = successPanel.querySelector<HTMLElement>('[data-newsletter-success-message]');
+          if (message && result.existingContact) {
+            message.textContent = 'Tu contacto ya existía; la suscripción quedó actualizada.';
+          }
+        }
         try {
           localStorage.setItem(subscribedKey, 'true');
         } catch {

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Astro + HubSpot Newsletter"
+  short_description: "Integra y verifica newsletters de Astro con HubSpot"
+  default_prompt: "Usa esta skill para implementar o revisar el envío de una newsletter personalizada desde Astro a HubSpot, incluyendo consentimiento, Turnstile y pruebas."
