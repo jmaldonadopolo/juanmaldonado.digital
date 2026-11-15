@@ -54,7 +54,7 @@ const isBlog = Astro.url.pathname.startsWith('/blog');
       </label>
       <label class="flex items-start gap-2.5 text-[11px] leading-5 text-smoke">
         <input name="consent" type="checkbox" value="yes" required class="mt-1 size-4 shrink-0 accent-[var(--color-acid)]" />
-        <span>Acepto recibir esta newsletter y que mi correo se use únicamente para este fin.</span>
+        <span>Acepto recibir la newsletter de Juan Maldonado por correo electrónico. Puedo cancelar mi suscripción cuando quiera.</span>
       </label>
       {siteKey ? (
         <div data-turnstile-widget data-sitekey={siteKey} data-action="newsletter_signup" class="min-h-0"></div>
@@ -78,7 +78,7 @@ const isBlog = Astro.url.pathname.startsWith('/blog');
 
     <div data-newsletter-success hidden class="rounded-xl border border-acid/30 bg-acid/5 p-4" role="status" aria-live="polite">
       <p class="font-semibold text-bone">Solicitud enviada.</p>
-      <p class="mt-1 text-sm leading-6 text-smoke">Recibí tu correo y gestionaré tu incorporación a la newsletter. Gracias por sumarte.</p>
+      <p class="mt-1 text-sm leading-6 text-smoke">Tu suscripción quedó registrada. Gracias por sumarte.</p>
     </div>
     <p class="text-[10px] leading-4 text-smoke/80">Protegido contra envíos automatizados con Cloudflare Turnstile.</p>
   </div>

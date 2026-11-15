@@ -329,7 +329,9 @@ No mantener dos procesos Astro sobre el puerto `4321`; puede provocar respuestas
 
 ## Formularios Y Newsletter
 
-El contacto y la suscripción usan POST /api/forms en una Cloudflare Pages Function, siguiendo el patrón Pages Functions + Resend de Scriptia. Antes de enviar, el servidor valida el origen, los campos, el consentimiento, el honeypot y el token con Turnstile Siteverify; también exige que coincidan el hostname y la acción. Resend notifica a hola@juanmaldonado.digital. La suscripción se notifica por correo: no se guarda en una base de datos ni se agrega a una plataforma de mailing.
+El contacto y la suscripción usan POST /api/forms en una Cloudflare Pages Function. Antes de enviar, el servidor valida el origen, los campos, el consentimiento, el honeypot y el token con Turnstile Siteverify; también exige que coincidan el hostname y la acción. El contacto se envía a hola@juanmaldonado.digital mediante Resend. La newsletter se registra en el formulario de HubSpot `0fef8795-7db3-492d-a366-b38037a3d13c` (portal `50945344`) con el consentimiento del tipo `Marketing Information` (`1932701360`); su workflow activo gestiona la automatización posterior. La API de HubSpot no requiere una clave privada.
+
+El envío usa actualmente el endpoint Forms API v3 legacy solicitado. HubSpot anunció que las APIs v1-v3 dejarán de tener soporte en septiembre de 2027; planificar la migración a la API versionada por fecha cuando HubSpot publique el reemplazo compatible para Forms Submissions.
 
 El popup se monta desde BaseLayout.astro para estar disponible en todo el sitio. Se abre 30 segundos después de cargar el home (`/`) como máximo una vez cada 14 días; al cerrarlo, la aparición automática se suspende 30 días. Los disparadores manuales están en el home, flotan en el blog y aparecen en el footer de Sobre mí. Una suscripción exitosa detiene aperturas automáticas en ese navegador.
 
@@ -342,6 +344,6 @@ Configurar en Cloudflare Pages, proyecto juanmaldonado-digital, Configuración >
     RESEND_TO_EMAIL=hola@juanmaldonado.digital
     TURNSTILE_SECRET_KEY=<secreto del widget productivo>
 
-RESEND_API_KEY y TURNSTILE_SECRET_KEY deben ser secretos. El dominio remitente debe estar verificado en Resend. La clave de Resend compartida en la conversación se debe rotar y reemplazar en Pages; no incluir credenciales en código, archivos de ejemplo ni commits.
+RESEND_API_KEY y TURNSTILE_SECRET_KEY deben ser secretos. El dominio remitente debe estar verificado en Resend. No se necesitan variables de Resend para newsletter; RESEND_API_KEY solo se usa para el formulario de contacto. No incluir credenciales en código, archivos de ejemplo ni commits.
 
 El comando npm run dev muestra el widget con un sitekey de prueba. Astro dev no ejecuta Pages Functions; para probar POST /api/forms localmente hay que construir el sitio y usar wrangler pages dev dist con .dev.vars basado en .dev.vars.example. El ejemplo solo contiene el secreto público de prueba de Turnstile.

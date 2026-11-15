@@ -21,6 +21,9 @@ interface Submission {
 }
 
 const inbox = 'hola@juanmaldonado.digital';
+const hubspotPortalId = '50945344';
+const hubspotFormGuid = '0fef8795-7db3-492d-a366-b38037a3d13c';
+const hubspotMarketingSubscriptionTypeId = 1932701360;
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const allowedTypes = new Set<FormType>(['contact', 'newsletter']);
 
@@ -87,6 +90,49 @@ async function sendEmail(apiKey: string, message: Record<string, unknown>) {
   }
 }
 
+async function submitNewsletterToHubSpot(email: string, request: Request) {
+  const requestUrl = new URL(request.url);
+  const referer = request.headers.get('referer');
+  let pageUri = requestUrl.origin;
+  if (referer) {
+    try {
+      const referringUrl = new URL(referer);
+      if (referringUrl.origin === requestUrl.origin) pageUri += referringUrl.pathname;
+    } catch {
+      // Ignore malformed or external referrers; form attribution is optional.
+    }
+  }
+
+  const response = await fetch(
+    `https://api.hsforms.com/submissions/v3/integration/submit/${hubspotPortalId}/${hubspotFormGuid}`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        fields: [{ name: 'email', value: email }],
+        submittedAt: String(Date.now()),
+        context: { pageUri, pageName: 'Newsletter | juanmaldonado.digital' },
+        legalConsentOptions: {
+          consent: {
+            consentToProcess: true,
+            text: 'Acepto que mis datos se procesen para gestionar mi suscripción a la newsletter.',
+            communications: [{
+              value: true,
+              subscriptionTypeId: hubspotMarketingSubscriptionTypeId,
+              text: 'Acepto recibir la newsletter de Juan Maldonado por correo electrónico.',
+            }],
+          },
+        },
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    console.error('HubSpot rejected newsletter submission', response.status);
+    throw new Error('hubspot_submission_failed');
+  }
+}
+
 export async function onRequestPost({ request, env }: PagesContext) {
   const origin = request.headers.get('origin');
   const requestUrl = new URL(request.url);
@@ -117,11 +163,6 @@ export async function onRequestPost({ request, env }: PagesContext) {
     console.error('TURNSTILE_SECRET_KEY is not configured');
     return json({ success: false, message: 'La verificación no está disponible. Intenta nuevamente más tarde.' }, 503);
   }
-  if (!env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is not configured');
-    return json({ success: false, message: 'El envío no está disponible en este momento.' }, 503);
-  }
-
   const expectedAction = payload.type === 'newsletter' ? 'newsletter_signup' : 'contact_request';
   const verified = await verifyTurnstile(
     payload.token,
@@ -133,19 +174,30 @@ export async function onRequestPost({ request, env }: PagesContext) {
   ).catch(() => false);
   if (!verified) return json({ success: false, message: 'La verificación expiró o no fue válida. Complétala nuevamente.' }, 400);
 
+  if (payload.type === 'newsletter') {
+    try {
+      await submitNewsletterToHubSpot(email, request);
+    } catch {
+      return json({ success: false, message: 'No pudimos registrar la suscripción. Inténtalo nuevamente en unos minutos.' }, 502);
+    }
+    return json({ success: true });
+  }
+
+  if (!env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY is not configured');
+    return json({ success: false, message: 'El envío no está disponible en este momento.' }, 503);
+  }
+
   const from = env.RESEND_FROM_EMAIL || 'Juan Maldonado <' + inbox + '>';
   const recipient = env.RESEND_TO_EMAIL || inbox;
-  const isNewsletter = payload.type === 'newsletter';
   const name = payload.fields.name?.trim() || '';
-  const subject = isNewsletter ? 'Nueva suscripción a la newsletter' : 'Nueva consulta web: ' + name;
-  const fields: Array<[string, string]> = isNewsletter
-    ? [['Correo electrónico', email]]
-    : [
-        ['Nombre', name],
-        ['Correo electrónico', email],
-        ['Empresa', payload.fields.company?.trim() || 'No indicado'],
-        ['Mensaje', payload.fields.message.trim()],
-      ];
+  const subject = 'Nueva consulta web: ' + name;
+  const fields: Array<[string, string]> = [
+    ['Nombre', name],
+    ['Correo electrónico', email],
+    ['Empresa', payload.fields.company?.trim() || 'No indicado'],
+    ['Mensaje', payload.fields.message.trim()],
+  ];
   const rows = fields.map(([label, value]) =>
     '<tr><th align="left" style="padding:12px;border-bottom:1px solid #1e1e1e;color:#929292;font-size:12px">' +
     escapeHtml(label) +
